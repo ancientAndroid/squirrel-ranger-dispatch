@@ -1,0 +1,1273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Squirrel Ranger Dispatch — NYC Parks</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --pine:#1F3D2B;
+    --pine-dark:#132A1D;
+    --paper:#F5F1E4;
+    --paper-dark:#EAE3CF;
+    --ink:#2B2B26;
+    --brass:#C08A2E;
+    --brass-light:#E0B45C;
+    --rust:#8B3A2B;
+    --sage:#5C7A62;
+    --card-shadow: 0 2px 0 rgba(43,43,38,0.08), 0 8px 20px -10px rgba(43,43,38,0.35);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:
+      radial-gradient(circle at 1px 1px, rgba(43,43,38,0.06) 1px, transparent 0) 0 0/22px 22px,
+      var(--paper);
+    color:var(--ink);
+    font-family:'IBM Plex Sans', sans-serif;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding:28px 16px 60px;
+  }
+  .wrap{width:100%; max-width:1440px;}
+
+  /* ---------- header / masthead ---------- */
+  .masthead{
+    display:flex; align-items:center; justify-content:space-between;
+    border-bottom:3px solid var(--pine);
+    padding-bottom:14px; margin-bottom:26px;
+    gap:16px; flex-wrap:wrap;
+  }
+  .masthead-title{
+    font-family:'Special Elite', monospace;
+    font-size:clamp(20px,3.4vw,30px);
+    color:var(--pine);
+    letter-spacing:0.5px;
+  }
+  .masthead-sub{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    color:var(--sage);
+    text-transform:uppercase;
+    letter-spacing:1.5px;
+    margin-top:4px;
+  }
+  .icon-btn{
+    width:44px; height:44px; border-radius:50%;
+    border:2px solid var(--pine);
+    background:var(--paper-dark);
+    color:var(--pine);
+    font-size:18px; font-weight:700;
+    cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    font-family:'IBM Plex Mono', monospace;
+    transition:background .12s ease, transform .12s ease;
+  }
+  .icon-btn:hover{background:var(--brass-light); transform:translateY(-1px);}
+  .badge{
+    width:64px; height:64px; border-radius:50%;
+    border:3px solid var(--brass);
+    display:flex; align-items:center; justify-content:center;
+    flex-direction:column;
+    background:radial-gradient(circle at 30% 25%, #fff8e6, var(--paper-dark) 70%);
+    box-shadow:var(--card-shadow);
+    font-family:'IBM Plex Mono', monospace;
+  }
+  .badge .rank-icon{font-size:20px;}
+  .badge .rank-score{font-size:10px; font-weight:600; color:var(--pine);}
+
+  /* ---------- screens ---------- */
+  .screen{display:none;}
+  .screen.active{display:block;}
+
+  /* ---------- intro ---------- */
+  .intro-card{
+    background:var(--paper-dark);
+    border:1px solid rgba(43,43,38,0.15);
+    border-radius:4px;
+    padding:32px clamp(18px,4vw,44px);
+    box-shadow:var(--card-shadow);
+    position:relative;
+    overflow:hidden;
+  }
+  .intro-card::before{
+    content:"";
+    position:absolute; top:0; left:0; right:0; height:6px;
+    background:repeating-linear-gradient(90deg, var(--pine) 0 14px, var(--brass) 14px 28px);
+  }
+  .stamp{
+    position:absolute; top:26px; right:28px;
+    border:3px solid var(--rust);
+    color:var(--rust);
+    font-family:'Special Elite', monospace;
+    font-size:13px;
+    padding:6px 10px;
+    border-radius:6px;
+    transform:rotate(9deg);
+    opacity:0.75;
+    letter-spacing:1px;
+  }
+  .intro-card h1{
+    font-family:'Special Elite', monospace;
+    font-size:clamp(24px,4vw,34px);
+    color:var(--pine);
+    margin:6px 0 6px;
+    line-height:1.25;
+  }
+  .intro-card p{ line-height:1.6; font-size:15px; max-width:620px;}
+  .intro-meta{
+    display:flex; gap:22px; flex-wrap:wrap;
+    margin:22px 0 26px;
+    font-family:'IBM Plex Mono', monospace;
+  }
+  .intro-meta div{font-size:12px; color:var(--sage);}
+  .intro-meta strong{display:block; font-size:22px; color:var(--pine); font-family:'IBM Plex Sans'; font-weight:700;}
+  .btn{
+    font-family:'IBM Plex Sans', sans-serif;
+    font-weight:600;
+    font-size:15px;
+    background:var(--pine);
+    color:var(--paper);
+    border:none;
+    padding:13px 26px;
+    border-radius:3px;
+    cursor:pointer;
+    letter-spacing:0.3px;
+    transition:transform .12s ease, background .12s ease;
+  }
+  .btn:hover{background:var(--pine-dark); transform:translateY(-1px);}
+  .btn.secondary{
+    background:transparent;
+    border:2px solid var(--pine);
+    color:var(--pine);
+    font-size:13px;
+    padding:9px 18px;
+  }
+  .btn.secondary:hover{background:rgba(31,61,43,0.08);}
+  .how-it-works{
+    margin-top:24px; padding-top:20px; border-top:1px dashed rgba(43,43,38,0.25);
+    display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:16px;
+  }
+  .how-step{font-size:13px; line-height:1.5;}
+  .how-step .num{
+    font-family:'Special Elite', monospace;
+    color:var(--brass); font-size:20px; display:block; margin-bottom:2px;
+  }
+
+  /* ---------- game screen ---------- */
+  .progress-row{
+    display:flex; justify-content:space-between; align-items:center;
+    margin-bottom:16px; font-family:'IBM Plex Mono', monospace; font-size:12px; color:var(--sage);
+  }
+  .progress-bar{
+    height:6px; background:var(--paper-dark); border-radius:3px; overflow:hidden;
+    flex:1; margin:0 14px;
+  }
+  .progress-fill{height:100%; background:var(--brass); width:0%; transition:width .35s ease;}
+
+  .ticket{
+    background:#fffdf7;
+    border:1px solid rgba(43,43,38,0.18);
+    border-left:6px solid var(--rust);
+    border-radius:3px;
+    padding:20px 22px;
+    box-shadow:var(--card-shadow);
+    margin-bottom:20px;
+    position:relative;
+  }
+  .ticket-label{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px; text-transform:uppercase; letter-spacing:1.5px;
+    color:var(--rust); font-weight:600; margin-bottom:8px;
+  }
+  .ticket-from{font-size:12px; color:var(--sage); margin-bottom:10px; font-style:italic;}
+  .ticket-text{font-size:18px; line-height:1.45; font-weight:500; color:var(--ink);}
+
+  .exhibit-card{
+    background:#fffdf7;
+    border:1px solid rgba(43,43,38,0.18);
+    border-left:6px solid var(--pine);
+    border-radius:3px;
+    padding:18px 20px 8px;
+    box-shadow:var(--card-shadow);
+    margin-bottom:20px;
+  }
+  .exhibit-label{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px; text-transform:uppercase; letter-spacing:1.5px;
+    color:var(--pine); font-weight:600; margin-bottom:10px;
+  }
+  .exhibit-card svg{width:100%; height:auto; max-width:100%; display:block; margin:0 auto;}
+
+  .help-row{display:flex; align-items:flex-start; justify-content:space-between; gap:16px; margin:0 0 16px;}
+  .options-heading{
+    font-family:'IBM Plex Sans', sans-serif; font-size:26px; font-weight:700;
+    color:var(--ink); letter-spacing:-0.2px; line-height:1.3; margin:0;
+  }
+  .hint-toggle{
+    font-family:'IBM Plex Mono', monospace; font-size:11px;
+    background:none; border:1px solid var(--brass); color:var(--brass);
+    border-radius:20px; padding:4px 12px; cursor:pointer; letter-spacing:0.5px;
+  }
+  .hint-toggle:hover{background:var(--brass); color:#fff;}
+  .hint-box{
+    display:none;
+    background:#fbf1da; border:1px dashed var(--brass); border-radius:4px;
+    padding:10px 14px; font-size:13px; color:var(--ink); margin-bottom:14px;
+  }
+  .hint-box.show{display:block;}
+
+  .round-layout{}
+  .round-layout.split{display:flex; flex-wrap:wrap; gap:24px; align-items:flex-start;}
+  .round-layout.split .prompt-col{flex:1 1 480px; min-width:280px;}
+  .round-layout.split .answer-col{flex:1 1 300px; min-width:260px;}
+  .round-layout.split .answer-col .options-grid{grid-template-columns:1fr; gap:14px;}
+
+  .options-grid{
+    display:grid; gap:20px; margin-bottom:8px;
+  }
+  .options-grid.cols-2{grid-template-columns:1fr 1fr;}
+  .options-grid.cols-1{grid-template-columns:1fr;}
+
+  .option-wrap{display:flex; flex-direction:column; gap:10px;}
+
+  .option-card{
+    background:#fffdf7;
+    border:2px solid rgba(43,43,38,0.15);
+    border-radius:12px;
+    cursor:pointer;
+    padding:12px 12px 14px;
+    transition:border-color .12s ease, transform .12s ease, background .12s ease;
+    text-align:left;
+    position:relative;
+    box-shadow:var(--card-shadow);
+  }
+  .option-card:hover{border-color:var(--brass); transform:translateY(-2px);}
+  .option-card.correct{border-color:#0CA109; background:#F8FFF9;}
+  .option-card.incorrect{border-color:#F60909; background:#FFF7F7;}
+  .option-card.disabled{pointer-events:none;}
+  .option-card svg{width:100%; height:auto; display:block;}
+  .zoom-btn{
+    position:absolute; bottom:8px; left:8px;
+    width:28px; height:28px; border-radius:50%;
+    border:1px solid var(--brass);
+    background:#fffdf7;
+    color:var(--pine);
+    font-size:13px;
+    cursor:pointer;
+    display:flex; align-items:center; justify-content:center;
+    z-index:2;
+    pointer-events:auto;
+    transition:background .12s ease, transform .12s ease;
+  }
+  .zoom-btn:hover{background:var(--brass-light); transform:scale(1.08);}
+  .status-icon{
+    position:absolute; top:8px; right:8px;
+    width:30px; height:30px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    font-size:16px; font-weight:700; color:#fff;
+    z-index:3;
+  }
+  .status-icon.status-correct{background:#0CA109;}
+  .status-icon.status-incorrect{background:#F60909;}
+
+  /* text-based ticket options for reverse rounds */
+  .ticket-option{
+    background:#fffdf7;
+    border:2px solid rgba(43,43,38,0.15);
+    border-radius:12px;
+    cursor:pointer;
+    padding:14px 16px;
+    transition:border-color .12s ease, transform .12s ease, background .12s ease;
+    text-align:left;
+    display:flex; flex-direction:column; gap:6px;
+    position:relative;
+    box-shadow:var(--card-shadow);
+  }
+  .ticket-option:hover{border-color:var(--brass); transform:translateY(-2px);}
+  .ticket-option.correct{border-color:#0CA109; background:#F8FFF9;}
+  .ticket-option.incorrect{border-color:#F60909; background:#FFF7F7;}
+  .ticket-option.disabled{pointer-events:none;}
+  .ticket-option .opt-from{font-size:11px; color:var(--sage); font-style:italic;}
+  .ticket-option .opt-text{font-size:14.5px; line-height:1.4; color:var(--ink);}
+
+  .option-footer{
+    display:none;
+    border-radius:10px;
+    border:2px solid;
+    padding:11px 15px;
+    font-size:13.5px;
+    line-height:1.5;
+  }
+  .option-footer.show{display:block; animation:fadein .2s ease;}
+  @keyframes fadein{from{opacity:0; transform:translateY(4px);} to{opacity:1; transform:translateY(0);}}
+  .option-footer.correct{background:#F8FFF9; border-color:#0CA109; color:#096008;}
+  .option-footer.incorrect{background:#FFF7F7; border-color:#F60909; color:#E50909;}
+  .option-footer b{font-family:'IBM Plex Sans', sans-serif;}
+
+  .next-row-wrap{display:none; margin-top:22px;}
+  .next-row-wrap.show{display:flex; justify-content:flex-end; animation:fadein .2s ease;}
+  .next-row{display:flex; justify-content:flex-end;}
+
+  /* ---------- summary ---------- */
+  .summary-card{
+    background:var(--paper-dark);
+    border:1px solid rgba(43,43,38,0.15);
+    border-radius:4px;
+    padding:34px clamp(18px,4vw,44px);
+    text-align:center;
+    box-shadow:var(--card-shadow);
+  }
+  .summary-badge{
+    width:120px; height:120px; border-radius:50%;
+    border:4px solid var(--brass);
+    margin:0 auto 18px;
+    display:flex; align-items:center; justify-content:center; flex-direction:column;
+    background:radial-gradient(circle at 30% 25%, #fff8e6, var(--paper-dark) 70%);
+    box-shadow:var(--card-shadow);
+  }
+  .summary-badge .rank-icon{font-size:44px;}
+  .summary-title{font-family:'Special Elite', monospace; font-size:26px; color:var(--pine); margin:4px 0;}
+  .summary-score{font-family:'IBM Plex Mono', monospace; font-size:15px; color:var(--sage); margin-bottom:6px;}
+  .summary-hints{font-family:'IBM Plex Mono', monospace; font-size:11px; color:var(--brass); margin-bottom:22px;}
+  .review-list{text-align:left; margin:22px 0; padding-top:18px; border-top:1px dashed rgba(43,43,38,0.25);}
+  .review-item{font-size:13px; padding:8px 0; border-bottom:1px solid rgba(43,43,38,0.08); display:flex; gap:10px;}
+  .review-item .mark{font-weight:700; width:18px; flex-shrink:0;}
+  .review-item .mark.ok{color:var(--pine);}
+  .review-item .mark.no{color:var(--rust);}
+  .btn-row{display:flex; gap:12px; justify-content:center; flex-wrap:wrap; margin-top:10px;}
+
+  /* ---------- help modal ---------- */
+  .modal-overlay{
+    display:none; position:fixed; inset:0; background:rgba(19,42,29,0.55);
+    align-items:center; justify-content:center; padding:20px; z-index:50;
+  }
+  .modal-overlay.show{display:flex;}
+  .modal-box{
+    background:var(--paper); border-radius:5px; max-width:640px; width:100%;
+    max-height:82vh; overflow-y:auto; padding:26px 28px; box-shadow:var(--card-shadow);
+    border:1px solid rgba(43,43,38,0.2);
+  }
+  .modal-close-row{text-align:right; margin-top:18px;}
+
+  .zoom-box{max-width:820px;}
+  .zoom-header{display:flex; align-items:center; justify-content:space-between; gap:16px; margin-bottom:14px;}
+  .zoom-title{font-family:'Special Elite', monospace; color:var(--pine); font-size:19px;}
+  .zoom-chart{background:#fffdf7; border:1px solid rgba(43,43,38,0.15); border-radius:4px; padding:14px;}
+  .zoom-chart svg{width:100%; height:auto; display:block;}
+
+  footer{margin-top:34px; font-size:11px; color:var(--sage); font-family:'IBM Plex Mono', monospace; text-align:center;}
+
+  @media (max-width:520px){
+    .ticket-text{font-size:16px;}
+    .options-grid{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="masthead">
+    <div>
+      <div class="masthead-title">🐿 Squirrel Ranger Dispatch</div>
+      <div class="masthead-sub">NYC Parks Dept. · Central Park Squirrel Census Field Unit</div>
+    </div>
+  </div>
+
+  <!-- INTRO SCREEN -->
+  <div class="screen active" id="screen-intro">
+    <div class="intro-card">
+      <div class="stamp">FIELD USE ONLY</div>
+      <h1>Welcome to the Squirrel Ranger Program</h1>
+      <p>
+        The Parks Department just wrapped its annual squirrel census — <strong>433 sightings</strong> logged
+        across <strong>20 parks</strong> in four boroughs. Now the questions are rolling in from staff,
+        press, and the public, and it's your job to match each request to the data visualization
+        that actually answers it. Some rounds hand you a question and ask you to pick the right chart.
+        Others hand you a chart and ask which question it actually answers — so read carefully either way.
+      </p>
+      <div class="intro-meta">
+        <div><strong id="metaSightings">—</strong>sightings logged</div>
+        <div><strong id="metaParks">—</strong>parks surveyed</div>
+        <div><strong id="metaCharts">—</strong>visualizations in your toolkit</div>
+        <div><strong id="metaTasks">—</strong>cases on your desk</div>
+      </div>
+      <button class="btn" id="startBtn">Start Shift →</button>
+
+      <div class="how-it-works">
+        <div class="how-step"><span class="num">01</span>Read the dispatch ticket (or the chart) closely — every case is a real question from a real park stakeholder.</div>
+        <div class="how-step"><span class="num">02</span>Match it to its counterpart. Stuck? Tap "Need a hint" for a nudge, or the ? button for a chart glossary.</div>
+        <div class="how-step"><span class="num">03</span>Get feedback, see the full answer, and climb the ranks from Trainee to Chief Ranger.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- GAME SCREEN -->
+  <div class="screen" id="screen-game">
+    <div class="progress-row">
+      <span id="progressLabel">Case 1 of 13</span>
+      <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+      <span id="scoreLabel">Score: 0</span>
+    </div>
+
+    <div id="roundLayout" class="round-layout">
+      <div id="promptCol" class="prompt-col"></div>
+      <div id="answerCol" class="answer-col">
+        <div class="help-row">
+          <div class="options-heading" id="optionsHeading">Which visualization answers this?</div>
+          <button class="hint-toggle" id="hintToggle">💡 Need a hint?</button>
+        </div>
+        <div class="hint-box" id="hintBox"></div>
+
+        <div class="options-grid" id="optionsGrid"></div>
+      </div>
+    </div>
+
+    <div class="next-row-wrap" id="nextRowWrap">
+      <button class="btn" id="nextBtn">Next Case →</button>
+    </div>
+  </div>
+
+  <!-- SUMMARY SCREEN -->
+  <div class="screen" id="screen-summary">
+    <div class="summary-card">
+      <div class="summary-badge" id="summaryBadge">
+        <div class="rank-icon">🎖</div>
+      </div>
+      <div class="summary-title" id="summaryRank">Trainee Ranger</div>
+      <div class="summary-score" id="summaryScore">You solved 0 of 13 cases</div>
+      <div class="summary-hints" id="summaryHints"></div>
+      <div id="summaryNote" style="max-width:520px;margin:0 auto;font-size:14px;line-height:1.6;"></div>
+      <div class="review-list" id="reviewList"></div>
+      <div class="btn-row">
+        <button class="btn" id="retryBtn">Run Another Shift</button>
+      </div>
+    </div>
+  </div>
+
+  <footer>Data: NYC Parks Squirrel Census · Built for the Park Squirrel Ranger training program
+    <span style="margin:0 6px;">·</span>
+    <a href="teachers.html" target="_blank" style="color:var(--sage); font-size:10px; text-decoration:underline;">For teachers</a>
+  </footer>
+</div>
+
+<!-- ZOOM MODAL -->
+<div class="modal-overlay" id="zoomModal">
+  <div class="modal-box zoom-box">
+    <div class="zoom-header">
+      <div class="zoom-title" id="zoomTitle">Chart</div>
+      <button class="icon-btn" id="closeZoomBtn" title="Close">×</button>
+    </div>
+    <div class="zoom-chart" id="zoomChart"></div>
+  </div>
+</div>
+
+<script>
+/* ============================== DATA ============================== */
+const DATA = {"chartA": {"parks": ["Seward Park", "Teardrop Park", "John V. Lindsay East River Park", "Fort Tryon Park", "Riverside Park (Section Near Grant Memorial)", "St. Nicholas Park", "City Hall Park", "J. Hood Wright Park", "Union Square Park", "Tompkins Square Park", "McCarren Park", "Msgr. McGolrick Park", "Madison Square Park", "Stuyvesant Square Park", "Columbus Park", "Battery Park", "Highbridge Park", "Washington Square Park", "Corlears Hook Park", "Marcus Garvey Park"], "ground": [7, 1, 11, 11, 25, 12, 13, 17, 11, 39, 26, 8, 6, 13, 2, 12, 6, 12, 3, 2], "above": [1, 0, 5, 1, 2, 3, 5, 7, 2, 3, 18, 6, 6, 12, 2, 5, 11, 17, 10, 32], "ground_pct": [100.0, 100.0, 92.0, 92.0, 89.0, 80.0, 72.0, 71.0, 69.0, 66.0, 59.0, 57.0, 55.0, 52.0, 50.0, 46.0, 38.0, 24.0, 19.0, 6.0], "area": ["LOWER MANHATTAN", "LOWER MANHATTAN", "CENTRAL MANHATTAN", "UPPER MANHATTAN", "UPPER MANHATTAN", "UPPER MANHATTAN", "LOWER MANHATTAN", "UPPER MANHATTAN", "CENTRAL MANHATTAN", "CENTRAL MANHATTAN", "BROOKLYN", "BROOKLYN", "CENTRAL MANHATTAN", "CENTRAL MANHATTAN", "LOWER MANHATTAN", "LOWER MANHATTAN", "UPPER MANHATTAN", "CENTRAL MANHATTAN", "LOWER MANHATTAN", "UPPER MANHATTAN"]}, "chartB": {"parks": ["Tompkins Square Park", "Washington Square Park", "McCarren Park", "Marcus Garvey Park", "Riverside Park (Section Near Grant Memorial)", "Battery Park", "Stuyvesant Square Park", "J. Hood Wright Park", "City Hall Park", "Corlears Hook Park", "Union Square Park", "Highbridge Park", "St. Nicholas Park", "Msgr. McGolrick Park", "John V. Lindsay East River Park", "Fort Tryon Park", "Madison Square Park", "Seward Park", "Columbus Park", "Teardrop Park"], "total": [59, 51, 44, 34, 28, 26, 25, 24, 18, 16, 16, 16, 15, 14, 12, 12, 11, 7, 4, 1], "area": ["CENTRAL MANHATTAN", "CENTRAL MANHATTAN", "BROOKLYN", "UPPER MANHATTAN", "UPPER MANHATTAN", "LOWER MANHATTAN", "CENTRAL MANHATTAN", "UPPER MANHATTAN", "LOWER MANHATTAN", "LOWER MANHATTAN", "CENTRAL MANHATTAN", "UPPER MANHATTAN", "UPPER MANHATTAN", "BROOKLYN", "CENTRAL MANHATTAN", "UPPER MANHATTAN", "CENTRAL MANHATTAN", "LOWER MANHATTAN", "LOWER MANHATTAN", "LOWER MANHATTAN"]}, "chartC": {"areas": ["Upper Manhattan", "Central Manhattan", "Lower Manhattan", "Brooklyn"], "indifferent": [87, 124, 19, 30], "approaches": [1, 17, 12, 6], "runs_from": [19, 5, 7, 8], "totals": [129, 174, 72, 58]}, "chartD": {"colors": ["Gray", "Cinnamon", "Black"], "counts": [390, 26, 16]}, "chartE": {"activities": ["Foraging", "Climbing", "Eating", "Running", "Chasing", "Sitting"], "counts": [130, 98, 78, 64, 43, 12]}, "chartG": {"buckets": ["0-2 ft", "3-7 ft", "8-14 ft", "15-24 ft", "25+ ft"], "counts": [11, 21, 18, 29, 33]}, "meta": {"total_sightings": 433, "total_parks": 20, "boroughs": ["UPPER MANHATTAN", "CENTRAL MANHATTAN", "LOWER MANHATTAN", "BROOKLYN"]}, "chartI": {"areas": ["Upper Manhattan", "Central Manhattan", "Lower Manhattan", "Brooklyn"], "gray": [123, 158, 66, 43], "cinnamon": [1, 5, 5, 15], "black": [5, 11, 0, 0], "totals": [129, 174, 72, 58]}, "chartJ": {"areas": ["Upper Manhattan", "Central Manhattan", "Lower Manhattan", "Brooklyn"], "totals": [129, 174, 72, 58]}, "chartK": {"labels": ["Gray", "Cinnamon", "White", "Black", "Mixed"], "counts": [152, 91, 60, 14, 22]}};
+
+/* ============================== SVG HELPERS ============================== */
+const FONT_LABEL = "'IBM Plex Mono', monospace";
+const FONT_TITLE = "'IBM Plex Sans', sans-serif";
+const COLORS = {
+  ground:'#8B3A2B', above:'#5C7A62', pine:'#1F3D2B', brass:'#C08A2E',
+  gray:'#8C8A7E', cinnamon:'#B0662E', black:'#2B2B26', white:'#D8CFB2', mixed:'#8A5A3C',
+  indifferent:'#5C7A62', approaches:'#C08A2E', runsfrom:'#8B3A2B'
+};
+
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function truncate(s, n){ return s.length>n ? s.slice(0,n-1)+'…' : s; }
+
+function svgOpen(w,h){
+  return `<svg viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;font-family:${FONT_LABEL};">`;
+}
+
+/* ---- chartT1: fur color as a plain HTML table (entry-level) ---- */
+function chartT1_svg(compact){
+  const colors = DATA.chartD.colors, counts = DATA.chartD.counts;
+  const fs = compact?12:15;
+  const rows = colors.map((c,i)=>`<tr style="border-bottom:1px solid rgba(43,43,38,0.1);"><td style="padding:8px 10px; color:#2B2B26;">${esc(c)}</td><td style="padding:8px 10px; text-align:right; color:#2B2B26; font-weight:600;">${counts[i]}</td></tr>`).join('');
+  return `<div style="font-family:${FONT_TITLE};">
+    <div style="font-size:${compact?12:16}px; font-weight:700; color:#1F3D2B; margin-bottom:8px;">Sightings by Fur Color</div>
+    <table style="width:100%; border-collapse:collapse; font-size:${fs}px;">
+      <tr style="background:#1F3D2B;"><th style="text-align:left; padding:8px 10px; color:#F5F1E4; font-weight:600;">Fur color</th><th style="text-align:right; padding:8px 10px; color:#F5F1E4; font-weight:600;">Sightings</th></tr>
+      ${rows}
+    </table>
+  </div>`;
+}
+
+/* ---- chartT2: fur color as a plain single-series bar (entry-level) ---- */
+function chartT2_svg(compact){
+  const colors = DATA.chartD.colors, counts = DATA.chartD.counts;
+  const colorMap = {Gray:COLORS.gray, Cinnamon:COLORS.cinnamon, Black:COLORS.black};
+  const w = compact?360:520, h = compact?150:190;
+  const labelW = compact?78:100;
+  const barX = labelW+8;
+  const barMaxW = w-barX-46;
+  const maxV = Math.max(...counts);
+  const rowH = compact?32:40;
+  const titleSize = compact?12:16;
+  const labelSize = compact?10.5:13;
+  let y = compact?22:34;
+  let s = svgOpen(w,h);
+  s += `<text x="4" y="${compact?14:22}" font-size="${titleSize}" font-family="${FONT_TITLE}" font-weight="700" fill="#1F3D2B">Sightings by Fur Color</text>`;
+  colors.forEach((c,i)=>{
+    const bw = (counts[i]/maxV)*barMaxW;
+    s += `<text x="${labelW}" y="${y+rowH*0.55}" font-size="${labelSize}" fill="#2B2B26" text-anchor="end">${esc(c)}</text>`;
+    s += `<rect x="${barX}" y="${y}" width="${bw}" height="${rowH*0.55}" fill="${colorMap[c]||'#999'}" rx="2"></rect>`;
+    s += `<text x="${barX+bw+8}" y="${y+rowH*0.4}" font-size="${labelSize}" fill="#2B2B26">${counts[i]}</text>`;
+    y += rowH;
+  });
+  s += `</svg>`;
+  return s;
+}
+
+/* ---- chartT3: borough totals as a plain HTML table (entry-level) ---- */
+function chartT3_svg(compact){
+  const areas = DATA.chartJ.areas, totals = DATA.chartJ.totals;
+  const sorted = areas.map((a,i)=>({a,t:totals[i]})).sort((x,y)=>y.t-x.t);
+  const fs = compact?12:15;
+  const rows = sorted.map(r=>`<tr style="border-bottom:1px solid rgba(43,43,38,0.1);"><td style="padding:8px 10px; color:#2B2B26;">${esc(r.a)}</td><td style="padding:8px 10px; text-align:right; color:#2B2B26; font-weight:600;">${r.t}</td></tr>`).join('');
+  return `<div style="font-family:${FONT_TITLE};">
+    <div style="font-size:${compact?12:16}px; font-weight:700; color:#1F3D2B; margin-bottom:8px;">Sightings by Borough</div>
+    <table style="width:100%; border-collapse:collapse; font-size:${fs}px;">
+      <tr style="background:#1F3D2B;"><th style="text-align:left; padding:8px 10px; color:#F5F1E4; font-weight:600;">Borough</th><th style="text-align:right; padding:8px 10px; color:#F5F1E4; font-weight:600;">Sightings</th></tr>
+      ${rows}
+    </table>
+  </div>`;
+}
+
+/* ---- chartT4: borough totals as a plain single-series bar (entry-level) ---- */
+function chartT4_svg(compact){
+  const areas = DATA.chartJ.areas, totals = DATA.chartJ.totals;
+  const sorted = areas.map((a,i)=>({a,t:totals[i]})).sort((x,y)=>y.t-x.t);
+  const w = compact?360:560, h = compact?190:230;
+  const labelW = compact?110:150;
+  const barX = labelW+8;
+  const barMaxW = w-barX-46;
+  const maxV = Math.max(...sorted.map(r=>r.t));
+  const rowH = compact?32:40;
+  const titleSize = compact?12:16;
+  const labelSize = compact?10:12.5;
+  let y = compact?22:34;
+  let s = svgOpen(w,h);
+  s += `<text x="4" y="${compact?14:22}" font-size="${titleSize}" font-family="${FONT_TITLE}" font-weight="700" fill="#1F3D2B">Sightings by Borough</text>`;
+  sorted.forEach(r=>{
+    const bw = (r.t/maxV)*barMaxW;
+    s += `<text x="${labelW}" y="${y+rowH*0.55}" font-size="${labelSize}" fill="#2B2B26" text-anchor="end">${esc(r.a)}</text>`;
+    s += `<rect x="${barX}" y="${y}" width="${bw}" height="${rowH*0.55}" fill="${COLORS.pine}" rx="2"></rect>`;
+    s += `<text x="${barX+bw+8}" y="${y+rowH*0.4}" font-size="${labelSize}" fill="#2B2B26">${r.t}</text>`;
+    y += rowH;
+  });
+  s += `</svg>`;
+  return s;
+}
+
+/* ---- chartA: ground vs above stacked horizontal bar, top N by ground_pct ---- */
+function chartA_svg(compact){
+  const N = compact ? 9 : 14;
+  const parks = DATA.chartA.parks.slice(0,N);
+  const ground = DATA.chartA.ground.slice(0,N);
+  const above = DATA.chartA.above.slice(0,N);
+  const pct = DATA.chartA.ground_pct.slice(0,N);
+  const w = compact?400:760, h = compact? (34+N*24) : (56+N*30);
+  const labelW = compact?120:200;
+  const barX = labelW+8;
+  const barMaxW = w-barX-70;
+  const maxTotal = Math.max(...parks.map((_,i)=>ground[i]+above[i]));
+  const rowH = compact?22:28;
+  const titleSize = compact?12:16;
+  const labelSize = compact?9.5:12.5;
+  let y = compact?24:42;
+  let s = svgOpen(w,h);
+  s += `<text x="4" y="${compact?14:22}" font-size="${titleSize}" font-family="${FONT_TITLE}" font-weight="700" fill="#1F3D2B">Ground vs. Above-Ground Sightings by Park</text>`;
+  parks.forEach((p,i)=>{
+    const total = ground[i]+above[i];
+    const gw = total? (ground[i]/maxTotal)*barMaxW : 0;
+    const aw = total? (above[i]/maxTotal)*barMaxW : 0;
+    const label = compact? truncate(p,17) : truncate(p,26);
+    s += `<text x="${labelW}" y="${y+rowH*0.65}" font-size="${labelSize}" fill="#2B2B26" text-anchor="end">${esc(label)}</text>`;
+    s += `<rect x="${barX}" y="${y}" width="${gw}" height="${rowH*0.62}" fill="${COLORS.ground}" rx="1"></rect>`;
+    s += `<rect x="${barX+gw}" y="${y}" width="${aw}" height="${rowH*0.62}" fill="${COLORS.above}" rx="1"></rect>`;
+    s += `<text x="${barX+gw+aw+6}" y="${y+rowH*0.5}" font-size="${labelSize*0.85}" fill="#5C7A62">${pct[i]}%</text>`;
+    y += rowH;
+  });
+  s += `<rect x="${barX}" y="${y+4}" width="12" height="12" fill="${COLORS.ground}"></rect><text x="${barX+16}" y="${y+14}" font-size="${labelSize}" fill="#2B2B26">Ground Plane</text>`;
+  s += `<rect x="${barX+130}" y="${y+4}" width="12" height="12" fill="${COLORS.above}"></rect><text x="${barX+146}" y="${y+14}" font-size="${labelSize}" fill="#2B2B26">Above Ground</text>`;
+  s += `</svg>`;
+  return s;
+}
+
+/* ---- chartB: total sightings per park, ranked horizontal bar ---- */
+function chartB_svg(compact){
+  const N = compact ? 9 : 14;
+  const parks = DATA.chartB.parks.slice(0,N);
+  const total = DATA.chartB.total.slice(0,N);
+  const w = compact?400:760, h = compact? (34+N*24) : (52+N*30);
+  const labelW = compact?120:200;
+  const barX = labelW+8;
+  const barMaxW = w-barX-50;
+  const maxV = Math.max(...total);
+  const rowH = compact?22:28;
+  const titleSize = compact?12:16;
+  const labelSize = compact?9.5:12.5;
+  let y = compact?24:40;
+  let s = svgOpen(w,h);
+  s += `<text x="4" y="${compact?14:22}" font-size="${titleSize}" font-family="${FONT_TITLE}" font-weight="700" fill="#1F3D2B">Total Squirrel Sightings by Park</text>`;
+  parks.forEach((p,i)=>{
+    const bw = (total[i]/maxV)*barMaxW;
+    const label = compact? truncate(p,17) : truncate(p,26);
+    s += `<text x="${labelW}" y="${y+rowH*0.65}" font-size="${labelSize}" fill="#2B2B26" text-anchor="end">${esc(label)}</text>`;
+    s += `<rect x="${barX}" y="${y}" width="${bw}" height="${rowH*0.62}" fill="${COLORS.pine}" rx="1"></rect>`;
+    s += `<text x="${barX+bw+6}" y="${y+rowH*0.5}" font-size="${labelSize}" fill="#2B2B26">${total[i]}</text>`;
+    y += rowH;
+  });
+  s += `</svg>`;
+  return s;
+}
+
+/* ---- chartC: interactions with humans, stacked vertical bar by borough ---- */
+function chartC_svg(compact){
+  const areas = DATA.chartC.areas;
+  const ind = DATA.chartC.indifferent, app = DATA.chartC.approaches, run = DATA.chartC.runs_from;
+  const w = compact?400:640, h = compact?260:400;
+  const chartTop = compact?36:60, chartBottom = h-(compact?46:64);
+  const chartH = chartBottom-chartTop;
+  const maxTotal = Math.max(...areas.map((_,i)=>ind[i]+app[i]+run[i]));
+  const colW = compact?56:88, gap = compact?26:46;
+  const startX = compact?36:60;
+  const titleSize = compact?12:16;
+  const labelSize = compact?9:12.5;
+  let s = svgOpen(w,h);
+  s += `<text x="4" y="${compact?14:22}" font-size="${titleSize}" font-family="${FONT_TITLE}" font-weight="700" fill="#1F3D2B">Human Interaction by Borough</text>`;
+  areas.forEach((a,i)=>{
+    const x = startX + i*(colW+gap);
+    const totalH = ind[i]+app[i]+run[i];
+    const scale = chartH/maxTotal;
+    let yCursor = chartBottom;
+    const segs = [[run[i],COLORS.runsfrom],[app[i],COLORS.approaches],[ind[i],COLORS.indifferent]];
+    segs.forEach(([val,color])=>{
+      const segH = val*scale;
+      yCursor -= segH;
+      s += `<rect x="${x}" y="${yCursor}" width="${colW}" height="${segH}" fill="${color}"></rect>`;
+    });
+    s += `<text x="${x+colW/2}" y="${chartBottom+(compact?16:20)}" font-size="${labelSize}" fill="#2B2B26" text-anchor="middle">${compact? a.split(' ')[0] : a}</text>`;
+    s += `<text x="${x+colW/2}" y="${yCursor-8}" font-size="${labelSize*0.85}" fill="#5C7A62" text-anchor="middle">n=${totalH}</text>`;
+  });
+  let lx = startX, ly = h-18;
+  const legend = [['Indifferent',COLORS.indifferent],['Approaches',COLORS.approaches],['Runs From',COLORS.runsfrom]];
+  legend.forEach(([label,color])=>{
+    s += `<rect x="${lx}" y="${ly}" width="12" height="12" fill="${color}"></rect><text x="${lx+16}" y="${ly+10}" font-size="${labelSize}" fill="#2B2B26">${label}</text>`;
+    lx += label.length* (compact?7:8) + 38;
+  });
+  s += `</svg>`;
+  return s;
+}
+
+/* ---- chartD: fur color donut ---- */
+function chartD_svg(compact){
+  const colors = DATA.chartD.colors, counts = DATA.chartD.counts;
+  const total = counts.reduce((a,b)=>a+b,0);
+  const w = compact?400:520, h = compact?250:400;
+  const cx = compact? w*0.32 : w*0.36, cy = h/2-6, r = compact?70:120, rInner = r*0.58;
+  const colorMap = {Gray:COLORS.gray, Cinnamon:COLORS.cinnamon, Black:COLORS.black};
+  const titleSize = compact?12:16;
+  let s = svgOpen(w,h);
+  s += `<text x="4" y="${compact?14:22}" font-size="${titleSize}" font-family="${FONT_TITLE}" font-weight="700" fill="#1F3D2B">Primary Fur Color, Citywide</text>`;
+  let angle = -Math.PI/2;
+  colors.forEach((c,i)=>{
+    const frac = counts[i]/total;
+    const a0 = angle, a1 = angle + frac*Math.PI*2;
+    const x0 = cx+r*Math.cos(a0), y0 = cy+r*Math.sin(a0);
+    const x1 = cx+r*Math.cos(a1), y1 = cy+r*Math.sin(a1);
+    const xi0 = cx+rInner*Math.cos(a1), yi0 = cy+rInner*Math.sin(a1);
+    const xi1 = cx+rInner*Math.cos(a0), yi1 = cy+rInner*Math.sin(a0);
+    const large = (a1-a0)>Math.PI?1:0;
+    const path = `M${x0},${y0} A${r},${r} 0 ${large} 1 ${x1},${y1} L${xi0},${yi0} A${rInner},${rInner} 0 ${large} 0 ${xi1},${yi1} Z`;
+    s += `<path d="${path}" fill="${colorMap[c]||'#999'}"></path>`;
+    angle = a1;
+  });
+  s += `<text x="${cx}" y="${cy+5}" font-size="${compact?15:20}" font-family="${FONT_TITLE}" font-weight="700" fill="#1F3D2B" text-anchor="middle">${total}</text>`;
+  s += `<text x="${cx}" y="${cy+(compact?18:26)}" font-size="${compact?8:11}" fill="#5C7A62" text-anchor="middle">sightings</text>`;
+  const legendX = compact? w*0.58 : cx+r+34;
+  let ly = compact? cy-36 : cy-48;
+  colors.forEach((c,i)=>{
+    const pct = Math.round(counts[i]/total*100);
+    s += `<rect x="${legendX}" y="${ly}" width="${compact?12:15}" height="${compact?12:15}" fill="${colorMap[c]||'#999'}"></rect>`;
+    s += `<text x="${legendX+(compact?16:22)}" y="${ly+(compact?10:13)}" font-size="${compact?10:13}" fill="#2B2B26">${c} — ${pct}%</text>`;
+    ly += compact?24:34;
+  });
+  s += `</svg>`;
+  return s;
+}
+
+/* ---- chartE: top activities, horizontal bar ---- */
+function chartE_svg(compact){
+  const acts = DATA.chartE.activities, counts = DATA.chartE.counts;
+  const w = compact?400:680, h = compact? (30+acts.length*26) : (52+acts.length*34);
+  const labelW = compact?90:150;
+  const barX = labelW+8;
+  const barMaxW = w-barX-50;
+  const maxV = Math.max(...counts);
+  const rowH = compact?24:32;
+  const titleSize = compact?12:16;
+  const labelSize = compact?10:13;
+  let y = compact?24:44;
+  let s = svgOpen(w,h);
+  s += `<text x="4" y="${compact?14:22}" font-size="${titleSize}" font-family="${FONT_TITLE}" font-weight="700" fill="#1F3D2B">Most Common Squirrel Activities</text>`;
+  acts.forEach((a,i)=>{
+    const bw = (counts[i]/maxV)*barMaxW;
+    s += `<text x="${labelW}" y="${y+rowH*0.62}" font-size="${labelSize}" fill="#2B2B26" text-anchor="end">${esc(a)}</text>`;
+    s += `<rect x="${barX}" y="${y}" width="${bw}" height="${rowH*0.6}" fill="${COLORS.brass}" rx="1"></rect>`;
+    s += `<text x="${barX+bw+6}" y="${y+rowH*0.5}" font-size="${labelSize}" fill="#2B2B26">${counts[i]}</text>`;
+    y += rowH;
+  });
+  s += `</svg>`;
+  return s;
+}
+
+/* ---- chartG: height above ground histogram ---- */
+function chartG_svg(compact){
+  const buckets = DATA.chartG.buckets, counts = DATA.chartG.counts;
+  const w = compact?400:560, h = compact?260:360;
+  const chartTop = compact?34:56, chartBottom = h-(compact?42:58);
+  const chartH = chartBottom-chartTop;
+  const maxV = Math.max(...counts);
+  const colW = compact?54:76, gap = compact?18:32;
+  const startX = compact?26:48;
+  const titleSize = compact?12:16;
+  const labelSize = compact?9.5:12.5;
+  let s = svgOpen(w,h);
+  s += `<text x="4" y="${compact?14:22}" font-size="${titleSize}" font-family="${FONT_TITLE}" font-weight="700" fill="#1F3D2B">Height Above Ground When Spotted</text>`;
+  buckets.forEach((b,i)=>{
+    const x = startX + i*(colW+gap);
+    const bh = (counts[i]/maxV)*chartH;
+    const y = chartBottom-bh;
+    s += `<rect x="${x}" y="${y}" width="${colW}" height="${bh}" fill="${COLORS.sage||'#5C7A62'}" rx="1"></rect>`;
+    s += `<text x="${x+colW/2}" y="${y-8}" font-size="${labelSize}" fill="#2B2B26" text-anchor="middle">${counts[i]}</text>`;
+    s += `<text x="${x+colW/2}" y="${chartBottom+(compact?16:20)}" font-size="${labelSize}" fill="#2B2B26" text-anchor="middle">${b}</text>`;
+  });
+  s += `</svg>`;
+  return s;
+}
+
+/* ---- chartI: fur color mix by borough, stacked vertical bar ---- */
+function chartI_svg(compact){
+  const areas = DATA.chartI.areas, gray=DATA.chartI.gray, cin=DATA.chartI.cinnamon, black=DATA.chartI.black, totals=DATA.chartI.totals;
+  const w = compact?400:600, h = compact?270:400;
+  const chartTop = compact?36:60, chartBottom = h-(compact?46:64);
+  const chartH = chartBottom-chartTop;
+  const maxTotal = Math.max(...totals);
+  const colW = compact?56:82, gap = compact?26:44;
+  const startX = compact?36:56;
+  const titleSize = compact?12:16;
+  const labelSize = compact?9:12.5;
+  let s = svgOpen(w,h);
+  s += `<text x="4" y="${compact?14:22}" font-size="${titleSize}" font-family="${FONT_TITLE}" font-weight="700" fill="#1F3D2B">Fur Color Mix by Borough</text>`;
+  areas.forEach((a,i)=>{
+    const x = startX + i*(colW+gap);
+    const scale = chartH/maxTotal;
+    let yCursor = chartBottom;
+    const segs = [[black[i],COLORS.black],[cin[i],COLORS.cinnamon],[gray[i],COLORS.gray]];
+    segs.forEach(([val,color])=>{
+      const segH = val*scale;
+      yCursor -= segH;
+      s += `<rect x="${x}" y="${yCursor}" width="${colW}" height="${segH}" fill="${color}"></rect>`;
+    });
+    s += `<text x="${x+colW/2}" y="${chartBottom+(compact?16:20)}" font-size="${labelSize}" fill="#2B2B26" text-anchor="middle">${compact? a.split(' ')[0] : a}</text>`;
+    s += `<text x="${x+colW/2}" y="${yCursor-8}" font-size="${labelSize*0.85}" fill="#5C7A62" text-anchor="middle">n=${totals[i]}</text>`;
+  });
+  let lx = startX, ly = h-18;
+  const legend = [['Gray',COLORS.gray],['Cinnamon',COLORS.cinnamon],['Black',COLORS.black]];
+  legend.forEach(([label,color])=>{
+    s += `<rect x="${lx}" y="${ly}" width="12" height="12" fill="${color}"></rect><text x="${lx+16}" y="${ly+10}" font-size="${labelSize}" fill="#2B2B26">${label}</text>`;
+    lx += label.length*(compact?7:8)+40;
+  });
+  s += `</svg>`;
+  return s;
+}
+
+/* ---- chartJ: borough treemap (total sightings) ---- */
+function chartJ_svg(compact){
+  const areas = DATA.chartJ.areas, totals = DATA.chartJ.totals;
+  const w = compact?400:640, h = compact?260:380;
+  const top = compact?30:50;
+  const plotW = w-16, plotH = h-top-14;
+  const total = totals.reduce((a,b)=>a+b,0);
+  const titleSize = compact?12:16;
+  const labelSize = compact?10.5:14;
+  const palette = [COLORS.pine, COLORS.sage||'#5C7A62', COLORS.brass, COLORS.ground];
+  // simple treemap: one row, widths proportional to totals
+  let s = svgOpen(w,h);
+  s += `<text x="4" y="${compact?14:22}" font-size="${titleSize}" font-family="${FONT_TITLE}" font-weight="700" fill="#1F3D2B">Total Sightings by Borough</text>`;
+  const sorted = areas.map((a,i)=>({a,t:totals[i],i})).sort((x,y)=>y.t-x.t);
+  let x = 8;
+  sorted.forEach((item,idx)=>{
+    const bw = (item.t/total)*plotW;
+    const pct = Math.round(item.t/total*100);
+    s += `<rect x="${x}" y="${top}" width="${bw}" height="${plotH}" fill="${palette[idx%palette.length]}" stroke="#fffdf7" stroke-width="2"></rect>`;
+    if(bw>50){
+      s += `<text x="${x+bw/2}" y="${top+plotH/2-6}" font-size="${labelSize}" fill="#F5F1E4" text-anchor="middle" font-weight="600">${item.a}</text>`;
+      s += `<text x="${x+bw/2}" y="${top+plotH/2+14}" font-size="${labelSize*0.9}" fill="#F5F1E4" text-anchor="middle">${item.t} (${pct}%)</text>`;
+    }
+    x += bw;
+  });
+  s += `</svg>`;
+  return s;
+}
+
+/* ---- chartK: secondary/highlight fur color donut ---- */
+function chartK_svg(compact){
+  const labels = DATA.chartK.labels, counts = DATA.chartK.counts;
+  const total = counts.reduce((a,b)=>a+b,0);
+  const w = compact?400:520, h = compact?250:400;
+  const cx = compact? w*0.32 : w*0.36, cy = h/2-6, r = compact?70:120, rInner = r*0.58;
+  const colorMap = {Gray:COLORS.gray, Cinnamon:COLORS.cinnamon, White:COLORS.white, Black:COLORS.black, Mixed:COLORS.mixed};
+  const titleSize = compact?12:16;
+  let s = svgOpen(w,h);
+  s += `<text x="4" y="${compact?14:22}" font-size="${titleSize}" font-family="${FONT_TITLE}" font-weight="700" fill="#1F3D2B">Secondary (Highlight) Fur Color</text>`;
+  let angle = -Math.PI/2;
+  labels.forEach((c,i)=>{
+    const frac = counts[i]/total;
+    const a0 = angle, a1 = angle + frac*Math.PI*2;
+    const x0 = cx+r*Math.cos(a0), y0 = cy+r*Math.sin(a0);
+    const x1 = cx+r*Math.cos(a1), y1 = cy+r*Math.sin(a1);
+    const xi0 = cx+rInner*Math.cos(a1), yi0 = cy+rInner*Math.sin(a1);
+    const xi1 = cx+rInner*Math.cos(a0), yi1 = cy+rInner*Math.sin(a0);
+    const large = (a1-a0)>Math.PI?1:0;
+    const path = `M${x0},${y0} A${r},${r} 0 ${large} 1 ${x1},${y1} L${xi0},${yi0} A${rInner},${rInner} 0 ${large} 0 ${xi1},${yi1} Z`;
+    s += `<path d="${path}" fill="${colorMap[c]||'#999'}" stroke="#fffdf7" stroke-width="1"></path>`;
+    angle = a1;
+  });
+  s += `<text x="${cx}" y="${cy+5}" font-size="${compact?15:20}" font-family="${FONT_TITLE}" font-weight="700" fill="#1F3D2B" text-anchor="middle">${total}</text>`;
+  s += `<text x="${cx}" y="${cy+(compact?18:26)}" font-size="${compact?8:11}" fill="#5C7A62" text-anchor="middle">logged</text>`;
+  const legendX = compact? w*0.58 : cx+r+34;
+  let ly = compact? cy-46 : cy-62;
+  labels.forEach((c,i)=>{
+    const pct = Math.round(counts[i]/total*100);
+    s += `<rect x="${legendX}" y="${ly}" width="${compact?12:15}" height="${compact?12:15}" fill="${colorMap[c]||'#999'}"></rect>`;
+    s += `<text x="${legendX+(compact?16:22)}" y="${ly+(compact?10:13)}" font-size="${compact?10:13}" fill="#2B2B26">${c} — ${pct}%</text>`;
+    ly += compact?22:30;
+  });
+  s += `</svg>`;
+  return s;
+}
+
+const CHARTS = {
+  T1:{render:chartT1_svg, title:"Sightings by Fur Color (Table)",
+     caption:`<b>What it shows:</b> a simple table of how many squirrels were spotted with each fur color, citywide. The simplest possible way to compare a small number of categories — just find the row.`},
+  T2:{render:chartT2_svg, title:"Sightings by Fur Color (Bar)",
+     caption:`<b>What it shows:</b> the same fur-color counts as a bar chart. Longer bar means more sightings — the most basic way to compare magnitude visually.`},
+  T3:{render:chartT3_svg, title:"Sightings by Borough (Table)",
+     caption:`<b>What it shows:</b> total squirrel sightings in each of the four boroughs, as a simple table.`},
+  T4:{render:chartT4_svg, title:"Sightings by Borough (Bar)",
+     caption:`<b>What it shows:</b> the same borough totals as a bar chart — compare bar length to find the borough with the most sightings.`},
+  A:{render:chartA_svg, title:"Ground vs. Above-Ground Sightings by Park",
+     caption:`<b>What it shows:</b> the share of sightings at ground level vs. up in trees/structures, ranked by park. Parks near the top of this list have squirrels stuck mostly on the ground — often a sign of thin tree canopy.`},
+  B:{render:chartB_svg, title:"Total Sightings by Park",
+     caption:`<b>What it shows:</b> a straight head-count of squirrel sightings per park, ranked highest to lowest. Good for questions about raw population or where to send more staff — but it says nothing about behavior or location within the park.`},
+  C:{render:chartC_svg, title:"Human Interaction by Borough",
+     caption:`<b>What it shows:</b> how squirrels react to people (Indifferent / Approaches / Runs From) broken down by borough. Useful for questions about how "bold" or "skittish" squirrels are in a given area.`},
+  D:{render:chartD_svg, title:"Primary Fur Color, Citywide",
+     caption:`<b>What it shows:</b> the overall split of fur colors across all 433 sightings. Handy for a single citywide fact, but it can't tell you where a color is more common.`},
+  E:{render:chartE_svg, title:"Most Common Squirrel Activities",
+     caption:`<b>What it shows:</b> what squirrels were actually doing when spotted, ranked by frequency. Good for questions about behavior — what visitors are likely to see, or when signage/education should focus attention.`},
+  G:{render:chartG_svg, title:"Height Above Ground When Spotted",
+     caption:`<b>What it shows:</b> how high off the ground squirrels were when logged, bucketed into ranges. The only chart here that answers a literal "how high" question, like where to mount a feeder out of reach.`},
+  I:{render:chartI_svg, title:"Fur Color Mix by Borough",
+     caption:`<b>What it shows:</b> the fur-color breakdown within each borough, aggregated. Good for a borough-level "which area has more of X color" question — a citywide chart or a park-level chart wouldn't capture the regional split.`},
+  J:{render:chartJ_svg, title:"Total Sightings by Borough",
+     caption:`<b>What it shows:</b> the share of all census sightings coming from each borough, sized proportionally. A quick "who dominates" answer at the borough level, rather than the park level.`},
+  K:{render:chartK_svg, title:"Secondary (Highlight) Fur Color",
+     caption:`<b>What it shows:</b> the breakdown of each squirrel's secondary/highlight fur marking — a different column from primary coat color, and easy to mix up with chart D.`}
+};
+
+/* ============================== LEVELS (fixed, non-random sequence) ============================== */
+/* Each level is either:
+   - forward: player sees a ticket, picks from [correct + distractors] chart ids
+   - reverse: player sees the chart for `correct`, picks from [this level's ticket + distractorTickets] */
+const LEVELS = [
+  {type:"forward", correct:"T1", from:"Volunteer Coordinator",
+   text:"What's the most common fur color spotted during the census?",
+   hint:"Just find the biggest number in the table — no chart-reading skill needed yet.",
+   distractors:["T3"]},
+  {type:"forward", correct:"T2", from:"Volunteer Coordinator",
+   text:"Same question, now as a bar — which fur color shows up most?",
+   hint:"Longer bar means more sightings. Find the longest one.",
+   distractors:["T4"]},
+  {type:"forward", correct:"T3", from:"Borough Records Office",
+   text:"Which borough logged the most total sightings?",
+   hint:"Just find the biggest number in the table.",
+   distractors:["T1"]},
+  {type:"forward", correct:"T4", from:"Borough Records Office",
+   text:"Same question as a bar — which borough's bar is tallest?",
+   hint:"Longer bar means more sightings.",
+   distractors:["T2"]},
+  {type:"forward", correct:"B", from:"Central Dispatch",
+   text:"Which single park logged the highest number of squirrel sightings during the census?",
+   hint:"This just needs a simple ranked head-count per park — no location or behavior split required.",
+   distractors:["T4"]},
+  {type:"forward", correct:"E", from:"Public Engagement / Nature Walks",
+   text:"A tour coordinator wants to know what squirrels are most commonly seen doing, so guides know what to point out to visitors.",
+   hint:"You need a ranking of behaviors/activities, not location or population.",
+   distractors:["B"]},
+  {type:"forward", correct:"G", from:"Facilities & Maintenance",
+   text:"We're installing squirrel-proof bird feeders. How high above ground should they be mounted, based on typical sighting heights?",
+   hint:"Look for a chart that buckets sightings by how high above ground they were spotted.",
+   distractors:["E"]},
+  {type:"forward", correct:"D", from:"Field Guide Design Team",
+   text:"We're redesigning the cover illustration for the park field guide. What's the most common fur color among NYC's park squirrels?",
+   hint:"This is a single citywide breakdown of primary coat color — not tied to any location.",
+   distractors:["K"]},
+  {type:"forward", correct:"C", from:"Parks Press Office",
+   text:"A reporter is asking which borough's squirrels seem most comfortable approaching people, rather than fleeing.",
+   hint:"Look for a chart that breaks human-interaction type down by borough, not by individual park.",
+   distractors:["I"]},
+  {type:"forward", correct:"J", from:"Annual Report Design Team",
+   text:"For the cover graphic, which borough accounted for the largest share of all squirrel sightings in the census, at a glance?",
+   hint:"A simple size-based comparison of total sightings per borough (not per park).",
+   distractors:["B"]},
+  {type:"forward", correct:"A", from:"Forestry & Horticulture Division",
+   text:"Which parks might benefit most from new tree plantings, based on how often squirrels there are stuck at ground level instead of up in the canopy?",
+   hint:"You need the ground-vs-above split per park, not just a single overall count.",
+   distractors:["C"]},
+  {type:"forward", correct:"I", from:"Regional Wildlife Textbook Author",
+   text:"For a borough-by-borough chapter, what's the fur-color mix in each of the four boroughs?",
+   hint:"This is a borough-level fur-color breakdown — look for the chart grouped by borough, not by park or citywide.",
+   distractors:["D"]},
+  {type:"reverse", correct:"D", from:"Field Guide Design Team",
+   text:"We're redesigning the cover illustration for the park field guide. What's the most common fur color among NYC's park squirrels?",
+   hint:"Read what the chart's legend is actually labeled — primary color, not secondary markings.",
+   distractorTickets:[
+     {from:"Parks Press Office", text:"A reporter is asking which borough's squirrels seem most comfortable approaching people, rather than fleeing."},
+     {from:"Public Engagement / Nature Walks", text:"A tour coordinator wants to know what squirrels are most commonly seen doing, so guides know what to point out to visitors."}
+   ]},
+  {type:"reverse", correct:"K", from:"Nature Documentary Costume Dept.",
+   text:"We want the most common secondary or 'highlight' fur marking, beyond each squirrel's main coat color, for a title-card graphic.",
+   hint:"This chart's legend says 'secondary' or 'highlight' fur color — not the primary coat color chart from before.",
+   distractorTickets:[
+     {from:"Field Guide Design Team", text:"We're redesigning the cover illustration for the park field guide. What's the most common fur color among NYC's park squirrels?"},
+     {from:"Regional Wildlife Textbook Author", text:"For a borough-by-borough chapter, what's the fur-color mix in each of the four boroughs?"}
+   ]}
+];
+
+/* ============================== GAME STATE ============================== */
+let idx = 0;
+let hintsUsed = 0;
+let hintUsedThisRound = false;
+let missed = [];
+
+// forward rounds are single-attempt and drive the rank
+let forwardTotal = 0;
+let forwardCorrect = 0;
+
+// reverse rounds are retry-until-correct; we track retries for flavor only
+let reverseTotal = 0;
+let reverseRetries = 0;
+
+// per-round working state
+let roundAnswered = false;   // forward: locked after first pick
+let roundSolved = false;     // reverse: true once correct ticket found
+let roundLocked = false;     // reverse: true during the brief wrong-answer pause
+let roundWrongCount = 0;     // reverse: wrong picks so far this round
+let reverseHintShown = false;// reverse: whether the chart title hint is currently shown
+
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]]=[a[j],a[i]];
+  }
+  return a;
+}
+
+function plainCaption(chartId){
+  return CHARTS[chartId].caption.split('<b>').join('').split('</b>').join('');
+}
+
+function withTitleHighlight(svgStr, titleText){
+  const w = Math.min(titleText.length*8.2+20, 480);
+  const rect = `<rect x="0" y="4" width="${w}" height="27" rx="8" fill="none" stroke="#0CA109" stroke-width="2.5"></rect>`;
+  const i = svgStr.indexOf('>')+1;
+  return svgStr.slice(0,i) + rect + svgStr.slice(i);
+}
+
+function rankFor(sc,totalTasks){
+  const pct = totalTasks>0 ? sc/totalTasks : 0;
+  if(pct>=0.92) return {name:"Chief Ranger", icon:"🏅", note:"Top marks. You read every dispatch like it was your own case file — the Parks Department wants you training the next cohort."};
+  if(pct>=0.7) return {name:"Senior Ranger", icon:"🎖", note:"Strong instincts for matching a real question to the right evidence. A little more care on the tricky ones and you're Chief material."};
+  if(pct>=0.4) return {name:"Field Ranger", icon:"🧭", note:"You've got the basics down. Review the missed cases below — the trick is usually reading exactly what's being asked, not just the topic."};
+  return {name:"Trainee Ranger", icon:"🌱", note:"Everyone starts here. Look closely at what each chart can and can't answer, then run another shift."};
+}
+
+function initGame(){
+  document.getElementById('metaSightings').textContent = DATA.meta.total_sightings;
+  document.getElementById('metaParks').textContent = DATA.meta.total_parks;
+  document.getElementById('metaTasks').textContent = LEVELS.length;
+  document.getElementById('metaCharts').textContent = Object.keys(CHARTS).length;
+}
+
+function startGame(){
+  idx = 0; hintsUsed = 0; missed = [];
+  forwardTotal = 0; forwardCorrect = 0; reverseTotal = 0; reverseRetries = 0;
+  showScreen('game');
+  loadCase();
+}
+
+function showScreen(name){
+  document.querySelectorAll('.screen').forEach(el=>el.classList.remove('active'));
+  document.getElementById('screen-'+name).classList.add('active');
+}
+
+function renderExhibit(chartId, withHint){
+  let svg = CHARTS[chartId].render(false);
+  if(withHint) svg = withTitleHighlight(svg, CHARTS[chartId].title);
+  document.getElementById('promptCol').innerHTML = `
+    <div class="exhibit-card">
+      <div class="exhibit-label">Exhibit — Field Data</div>
+      ${svg}
+    </div>`;
+}
+
+function loadCase(){
+  roundAnswered = false;
+  roundSolved = false;
+  roundLocked = false;
+  roundWrongCount = 0;
+  reverseHintShown = false;
+  hintUsedThisRound = false;
+
+  const level = LEVELS[idx];
+  const type = level.type;
+  document.getElementById('progressLabel').textContent = `Level ${idx+1} of ${LEVELS.length}`;
+  document.getElementById('scoreLabel').textContent = `Score: ${forwardCorrect}/${forwardTotal}`;
+  document.getElementById('progressFill').style.width = `${(idx/LEVELS.length)*100}%`;
+  document.getElementById('nextRowWrap').classList.remove('show');
+  document.getElementById('hintBox').classList.remove('show');
+  document.getElementById('hintBox').textContent = '';
+
+  const promptCol = document.getElementById('promptCol');
+  const roundLayout = document.getElementById('roundLayout');
+  const heading = document.getElementById('optionsHeading');
+  const grid = document.getElementById('optionsGrid');
+  grid.innerHTML = '';
+
+  if(type==='forward'){
+    roundLayout.classList.remove('split');
+    promptCol.innerHTML = `
+      <div class="ticket">
+        <div class="ticket-label">Dispatch Ticket</div>
+        <div class="ticket-from">From: ${esc(level.from)}</div>
+        <div class="ticket-text">${esc(level.text)}</div>
+      </div>`;
+    heading.textContent = 'Select the chart that may help resolve the ticket above';
+    grid.classList.remove('cols-1'); grid.classList.add('cols-2');
+
+    const optionIds = shuffle([level.correct, ...level.distractors]);
+    optionIds.forEach(chartId=>{
+      const wrap = document.createElement('div');
+      wrap.className = 'option-wrap';
+      const card = document.createElement('div');
+      card.className = 'option-card';
+      card.dataset.value = chartId;
+      card.innerHTML = `<button class="zoom-btn" data-chart-id="${chartId}" title="Zoom in">🔍</button>${CHARTS[chartId].render(true)}`;
+      card.addEventListener('click', ()=>selectChartOption(card, chartId, level.correct));
+      const zoomBtn = card.querySelector('.zoom-btn');
+      zoomBtn.addEventListener('click', (e)=>{ e.stopPropagation(); openZoom(chartId); });
+      const footer = document.createElement('div');
+      footer.className = 'option-footer';
+      wrap.appendChild(card);
+      wrap.appendChild(footer);
+      grid.appendChild(wrap);
+    });
+  } else {
+    roundLayout.classList.add('split');
+    renderExhibit(level.correct, false);
+    heading.textContent = 'Select the ticket that may be resolved by this chart';
+    grid.classList.remove('cols-2'); grid.classList.add('cols-1');
+
+    const correctTicket = {from:level.from, text:level.text, correct:level.correct};
+    const optionTickets = shuffle([correctTicket, ...level.distractorTickets]);
+    optionTickets.forEach(t=>{
+      const wrap = document.createElement('div');
+      wrap.className = 'option-wrap';
+      const card = document.createElement('div');
+      card.className = 'ticket-option';
+      card.innerHTML = `<span class="opt-from">From: ${esc(t.from)}</span><span class="opt-text">${esc(t.text)}</span>`;
+      card.addEventListener('click', ()=>selectTicketOption(card, t, correctTicket));
+      const footer = document.createElement('div');
+      footer.className = 'option-footer';
+      wrap.appendChild(card);
+      wrap.appendChild(footer);
+      grid.appendChild(wrap);
+    });
+  }
+}
+
+function openZoom(chartId){
+  document.getElementById('zoomTitle').textContent = CHARTS[chartId].title;
+  document.getElementById('zoomChart').innerHTML = CHARTS[chartId].render(false);
+  document.getElementById('zoomModal').classList.add('show');
+}
+
+function toggleHint(){
+  const box = document.getElementById('hintBox');
+  const level = LEVELS[idx];
+  if(!box.classList.contains('show')){
+    box.textContent = '💡 ' + level.hint;
+    box.classList.add('show');
+    if(!hintUsedThisRound){ hintUsedThisRound = true; hintsUsed++; }
+  } else {
+    box.classList.remove('show');
+  }
+}
+
+function showFooter(wrap, kind, html){
+  const footer = wrap.querySelector('.option-footer');
+  footer.className = 'option-footer show ' + kind;
+  footer.innerHTML = html;
+}
+
+/* ---------- forward round: single-attempt, ends immediately ---------- */
+function selectChartOption(card, chosenId, correctId){
+  if(roundAnswered) return;
+  roundAnswered = true;
+  forwardTotal++;
+  const isCorrect = chosenId===correctId;
+  if(isCorrect) forwardCorrect++;
+  else missed.push(LEVELS[idx]);
+
+  document.querySelectorAll('#optionsGrid .option-card, #optionsGrid .ticket-option').forEach(c=>c.classList.add('disabled'));
+
+  document.querySelectorAll('#optionsGrid .option-wrap').forEach(wrap=>{
+    const c = wrap.querySelector('.option-card');
+    const id = c.dataset.value;
+    if(isCorrect){
+      // only decorate the chosen (correct) card
+      if(c===card){
+        c.classList.add('correct');
+        c.insertAdjacentHTML('beforeend', '<span class="status-icon status-correct">✓</span>');
+        showFooter(wrap, 'correct', `<b>This is the correct chart!</b> ${plainCaption(id)}`);
+      }
+    } else {
+      // wrong pick: decorate both — the wrong one red, the correct one revealed green
+      if(c===card){
+        c.classList.add('incorrect');
+        c.insertAdjacentHTML('beforeend', '<span class="status-icon status-incorrect">✗</span>');
+        showFooter(wrap, 'incorrect', `<b>Not quite.</b> This chart actually shows ${esc(CHARTS[id].title.toLowerCase())} — not what the ticket is asking for.`);
+      } else if(id===correctId){
+        c.classList.add('correct');
+        c.insertAdjacentHTML('beforeend', '<span class="status-icon status-correct">✓</span>');
+        showFooter(wrap, 'correct', `<b>This is the correct chart!</b> ${plainCaption(id)}`);
+      }
+    }
+  });
+
+  document.getElementById('scoreLabel').textContent = `Score: ${forwardCorrect}/${forwardTotal}`;
+  document.getElementById('nextRowWrap').classList.add('show');
+}
+
+/* ---------- reverse round: retry until correct ---------- */
+function selectTicketOption(card, chosenTask, correctTask){
+  if(roundSolved || roundLocked) return;
+  const wrap = card.closest('.option-wrap');
+  const isCorrect = chosenTask===correctTask;
+
+  if(isCorrect){
+    roundSolved = true;
+    card.classList.add('correct');
+    card.insertAdjacentHTML('beforeend', '<span class="status-icon status-correct">✓</span>');
+    showFooter(wrap, 'correct', `<b>You matched it!</b> ${plainCaption(correctTask.correct)}`);
+    document.querySelectorAll('#optionsGrid .ticket-option').forEach(c=>c.classList.add('disabled'));
+    reverseTotal++;
+    document.getElementById('nextRowWrap').classList.add('show');
+    return;
+  }
+
+  // wrong pick
+  roundWrongCount++;
+  reverseRetries++;
+  roundLocked = true;
+  document.querySelectorAll('#optionsGrid .ticket-option').forEach(c=>c.classList.add('disabled'));
+  card.classList.add('incorrect');
+  card.insertAdjacentHTML('beforeend', '<span class="status-icon status-incorrect">✗</span>');
+  showFooter(wrap, 'incorrect', `<b>Not quite.</b> This chart is actually about ${esc(CHARTS[correctTask.correct].title.toLowerCase())}.`);
+
+  if(!reverseHintShown){
+    reverseHintShown = true;
+    renderExhibit(correctTask.correct, true);
+  }
+
+  setTimeout(()=>{
+    // reset all tickets to neutral so the player can try again
+    document.querySelectorAll('#optionsGrid .option-wrap').forEach(w=>{
+      const c = w.querySelector('.ticket-option');
+      c.classList.remove('correct','incorrect','disabled');
+      const icon = c.querySelector('.status-icon');
+      if(icon) icon.remove();
+      const footer = w.querySelector('.option-footer');
+      footer.className = 'option-footer';
+      footer.innerHTML = '';
+    });
+    roundLocked = false;
+  }, 1600);
+}
+
+function nextCase(){
+  idx++;
+  if(idx>=LEVELS.length){
+    finishGame();
+  } else {
+    loadCase();
+  }
+}
+
+function finishGame(){
+  document.getElementById('progressFill').style.width = '100%';
+  const rank = rankFor(forwardCorrect, forwardTotal);
+  document.getElementById('summaryRank').textContent = rank.name;
+  document.getElementById('summaryBadge').querySelector('.rank-icon').textContent = rank.icon;
+  document.getElementById('summaryScore').textContent = `You answered ${forwardCorrect} of ${forwardTotal} single-attempt tickets correctly`;
+  const reverseNote = reverseTotal>0
+    ? `Chart-matching rounds: solved all ${reverseTotal}, with ${reverseRetries} retr${reverseRetries===1?'y':'ies'} along the way`
+    : '';
+  const hintNote = hintsUsed>0 ? `Used ${hintsUsed} hint${hintsUsed===1?'':'s'} this shift` : 'No hints used this shift';
+  document.getElementById('summaryHints').textContent = [reverseNote, hintNote].filter(Boolean).join(' · ');
+  document.getElementById('summaryNote').textContent = rank.note;
+
+  const reviewList = document.getElementById('reviewList');
+  reviewList.innerHTML = '';
+  if(missed.length===0){
+    reviewList.innerHTML = '<div style="font-size:13px;color:#5C7A62;">Perfect shift — no missed tickets to review.</div>';
+  } else {
+    const heading = document.createElement('div');
+    heading.style.cssText = "font-family:'IBM Plex Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:#8B3A2B;margin-bottom:10px;";
+    heading.textContent = 'Tickets to review';
+    reviewList.appendChild(heading);
+    missed.forEach(t=>{
+      const div = document.createElement('div');
+      div.className = 'review-item';
+      div.innerHTML = `<span class="mark no">✗</span><span>${esc(t.text)} <em style="color:#5C7A62;">(correct chart: ${CHARTS[t.correct].title})</em></span>`;
+      reviewList.appendChild(div);
+    });
+  }
+
+  showScreen('summary');
+}
+
+
+document.getElementById('startBtn').addEventListener('click', startGame);
+document.getElementById('nextBtn').addEventListener('click', nextCase);
+document.getElementById('retryBtn').addEventListener('click', startGame);
+document.getElementById('hintToggle').addEventListener('click', toggleHint);
+document.getElementById('closeZoomBtn').addEventListener('click', ()=>document.getElementById('zoomModal').classList.remove('show'));
+document.getElementById('zoomModal').addEventListener('click', (e)=>{ if(e.target.id==='zoomModal') document.getElementById('zoomModal').classList.remove('show'); });
+
+initGame();
+</script>
+</body>
+</html>

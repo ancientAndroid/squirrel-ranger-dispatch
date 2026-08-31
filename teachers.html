@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For Teachers — Squirrel Ranger Dispatch</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --pine:#1F3D2B;
+    --pine-dark:#132A1D;
+    --paper:#F5F1E4;
+    --paper-dark:#EAE3CF;
+    --ink:#2B2B26;
+    --brass:#C08A2E;
+    --brass-light:#E0B45C;
+    --rust:#8B3A2B;
+    --sage:#5C7A62;
+    --card-shadow: 0 2px 0 rgba(43,43,38,0.08), 0 8px 20px -10px rgba(43,43,38,0.35);
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:
+      radial-gradient(circle at 1px 1px, rgba(43,43,38,0.06) 1px, transparent 0) 0 0/22px 22px,
+      var(--paper);
+    color:var(--ink);
+    font-family:'IBM Plex Sans', sans-serif;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding:28px 16px 60px;
+  }
+  .wrap{width:100%; max-width:1200px;}
+
+  .masthead{
+    border-bottom:3px solid var(--pine);
+    padding-bottom:14px; margin-bottom:30px;
+  }
+  .masthead-title{
+    font-family:'Special Elite', monospace;
+    font-size:clamp(26px,4vw,38px);
+    color:var(--pine);
+    letter-spacing:0.5px;
+  }
+  .masthead-sub{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    color:var(--sage);
+    text-transform:uppercase;
+    letter-spacing:1.5px;
+    margin-top:6px;
+  }
+
+  .intro{
+    background:var(--paper-dark);
+    border:1px solid rgba(43,43,38,0.15);
+    border-radius:4px;
+    padding:18px 22px;
+    margin-bottom:36px;
+    font-size:14.5px;
+    line-height:1.6;
+  }
+
+  h2.section{
+    font-family:'Special Elite', monospace;
+    font-size:24px;
+    color:var(--pine);
+    border-bottom:2px solid var(--brass);
+    padding-bottom:8px;
+    margin:44px 0 18px;
+  }
+
+  table.levels{
+    width:100%;
+    border-collapse:collapse;
+    background:#fffdf7;
+    border:1px solid rgba(43,43,38,0.18);
+    border-radius:4px;
+    overflow:hidden;
+    box-shadow:var(--card-shadow);
+    font-size:13.5px;
+  }
+  table.levels th{
+    background:var(--pine);
+    color:var(--paper);
+    text-align:left;
+    padding:10px 12px;
+    font-weight:600;
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:0.5px;
+  }
+  table.levels td{
+    padding:10px 12px;
+    border-bottom:1px solid rgba(43,43,38,0.1);
+    vertical-align:top;
+    line-height:1.5;
+  }
+  table.levels tr:last-child td{border-bottom:none;}
+  table.levels tr:nth-child(even) td{background:rgba(192,138,46,0.06);}
+  .level-num{
+    font-family:'IBM Plex Mono', monospace;
+    font-weight:700;
+    color:var(--brass);
+    text-align:center;
+  }
+  .round-tag{
+    display:inline-block;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:10.5px;
+    text-transform:uppercase;
+    letter-spacing:0.5px;
+    padding:2px 8px;
+    border-radius:12px;
+    border:1px solid;
+  }
+  .round-tag.forward{color:var(--pine); border-color:var(--pine); background:rgba(31,61,43,0.06);}
+  .round-tag.reverse{color:var(--rust); border-color:var(--rust); background:rgba(139,58,43,0.06);}
+  .chart-name{font-weight:600; color:var(--ink);}
+  .why{color:var(--sage);}
+
+  .chart-grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(340px,1fr));
+    gap:20px;
+  }
+  .chart-card{
+    background:#fffdf7;
+    border:1px solid rgba(43,43,38,0.18);
+    border-radius:6px;
+    padding:16px 18px 18px;
+    box-shadow:var(--card-shadow);
+  }
+  .chart-card .chart-id{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:10px;
+    text-transform:uppercase;
+    letter-spacing:1px;
+    color:var(--brass);
+    margin-bottom:8px;
+  }
+  .chart-card .chart-caption{
+    font-size:13px;
+    line-height:1.55;
+    color:var(--ink);
+    margin-top:12px;
+    padding-top:12px;
+    border-top:1px dashed rgba(43,43,38,0.2);
+  }
+  .chart-card .chart-caption b{color:var(--pine);}
+
+  footer{margin-top:40px; font-size:11px; color:var(--sage); font-family:'IBM Plex Mono', monospace; text-align:center;}
+  a.back{color:var(--sage); font-size:12px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="masthead">
+    <div class="masthead-title">For Teachers</div>
+    <div class="masthead-sub">Squirrel Ranger Dispatch · Data Literacy Game Reference</div>
+  </div>
+
+  <div class="intro">
+    This page is a reference for educators, not students. It documents the fixed level sequence students play through (in order, no randomization) and shows every visualization used in the game, along with what each one actually shows and why it's positioned where it is in the difficulty ramp.
+  </div>
+
+  <h2 class="section">Leveling</h2>
+  <table class="levels" id="levelsTable">
+    <tr>
+      <th style="width:48px;">#</th>
+      <th style="width:110px;">Round type</th>
+      <th style="width:220px;">Visualization</th>
+      <th>Example ticket</th>
+      <th style="width:280px;">Why it sits here</th>
+    </tr>
+  </table>
+
+  <h2 class="section">All Charts</h2>
+  <div class="chart-grid" id="chartGrid"></div>
+
+  <footer>
+    Data: NYC Parks Squirrel Census · Reference for the Park Squirrel Ranger training program
+    <br><br>
+    <a class="back" href="index.html">← Back to the game</a>
+  </footer>
+</div>
+
+<script>
+/* ============================== CHART DATA + RENDER CODE (shared with the game) ============================== */
+const DATA = {"chartA": {"parks": ["Seward Park", "Teardrop Park", "John V. Lindsay East River Park", "Fort Tryon Park", "Riverside Park (Section Near Grant Memorial)", "St. Nicholas Park", "City Hall Park", "J. Hood Wright Park", "Union Square Park", "Tompkins Square Park", "McCarren Park", "Msgr. McGolrick Park", "Madison Square Park", "Stuyvesant Square Park", "Columbus Park", "Battery Park", "Highbridge Park", "Washington Square Park", "Corlears Hook Park", "Marcus Garvey Park"], "ground": [7, 1, 11, 11, 25, 12, 13, 17, 11, 39, 26, 8, 6, 13, 2, 12, 6, 12, 3, 2], "above": [1, 0, 5, 1, 2, 3, 5, 7, 2, 3, 18, 6, 6, 12, 2, 5, 11, 17, 10, 32], "ground_pct": [100.0, 100.0, 92.0, 92.0, 89.0, 80.0, 72.0, 71.0, 69.0, 66.0, 59.0, 57.0, 55.0, 52.0, 50.0, 46.0, 38.0, 24.0, 19.0, 6.0], "area": ["LOWER MANHATTAN", "LOWER MANHATTAN", "CENTRAL MANHATTAN", "UPPER MANHATTAN", "UPPER MANHATTAN", "UPPER MANHATTAN", "LOWER MANHATTAN", "UPPER MANHATTAN", "CENTRAL MANHATTAN", "CENTRAL MANHATTAN", "BROOKLYN", "BROOKLYN", "CENTRAL MANHATTAN", "CENTRAL MANHATTAN", "LOWER MANHATTAN", "LOWER MANHATTAN", "UPPER MANHATTAN", "CENTRAL MANHATTAN", "LOWER MANHATTAN", "UPPER MANHATTAN"]}, "chartB": {"parks": ["Tompkins Square Park", "Washington Square Park", "McCarren Park", "Marcus Garvey Park", "Riverside Park (Section Near Grant Memorial)", "Battery Park", "Stuyvesant Square Park", "J. Hood Wright Park", "City Hall Park", "Corlears Hook Park", "Union Square Park", "Highbridge Park", "St. Nicholas Park", "Msgr. McGolrick Park", "John V. Lindsay East River Park", "Fort Tryon Park", "Madison Square Park", "Seward Park", "Columbus Park", "Teardrop Park"], "total": [59, 51, 44, 34, 28, 26, 25, 24, 18, 16, 16, 16, 15, 14, 12, 12, 11, 7, 4, 1], "area": ["CENTRAL MANHATTAN", "CENTRAL MANHATTAN", "BROOKLYN", "UPPER MANHATTAN", "UPPER MANHATTAN", "LOWER MANHATTAN", "CENTRAL MANHATTAN", "UPPER MANHATTAN", "LOWER MANHATTAN", "LOWER MANHATTAN", "CENTRAL MANHATTAN", "UPPER MANHATTAN", "UPPER MANHATTAN", "BROOKLYN", "CENTRAL MANHATTAN", "UPPER MANHATTAN", "CENTRAL MANHATTAN", "LOWER MANHATTAN", "LOWER MANHATTAN", "LOWER MANHATTAN"]}, "chartC": {"areas": ["Upper Manhattan", "Central Manhattan", "Lower Manhattan", "Brooklyn"], "indifferent": [87, 124, 19, 30], "approaches": [1, 17, 12, 6], "runs_from": [19, 5, 7, 8], "totals": [129, 174, 72, 58]}, "chartD": {"colors": ["Gray", "Cinnamon", "Black"], "counts": [390, 26, 16]}, "chartE": {"activities": ["Foraging", "Climbing", "Eating", "Running", "Chasing", "Sitting"], "counts": [130, 98, 78, 64, 43, 12]}, "chartG": {"buckets": ["0-2 ft", "3-7 ft", "8-14 ft", "15-24 ft", "25+ ft"], "counts": [11, 21, 18, 29, 33]}, "meta": {"total_sightings": 433, "total_parks": 20, "boroughs": ["UPPER MANHATTAN", "CENTRAL MANHATTAN", "LOWER MANHATTAN", "BROOKLYN"]}, "chartI": {"areas": ["Upper Manhattan", "Central Manhattan", "Lower Manhattan", "Brooklyn"], "gray": [123, 158, 66, 43], "cinnamon": [1, 5, 5, 15], "black": [5, 11, 0, 0], "totals": [129, 174, 72, 58]}, "chartJ": {"areas": ["Upper Manhattan", "Central Manhattan", "Lower Manhattan", "Brooklyn"], "totals": [129, 174, 72, 58]}, "chartK": {"labels": ["Gray", "Cinnamon", "White", "Black", "Mixed"], "counts": [152, 91, 60, 14, 22]}};
+
+/* ============================== SVG HELPERS ============================== */
+const FONT_LABEL = "'IBM Plex Mono', monospace";
+const FONT_TITLE = "'IBM Plex Sans', sans-serif";
+const COLORS = {
+  ground:'#8B3A2B', above:'#5C7A62', pine:'#1F3D2B', brass:'#C08A2E',
+  gray:'#8C8A7E', cinnamon:'#B0662E', black:'#2B2B26', white:'#D8CFB2', mixed:'#8A5A3C',
+  indifferent:'#5C7A62', approaches:'#C08A2E', runsfrom:'#8B3A2B'
+};
+
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function truncate(s, n){ return s.length>n ? s.slice(0,n-1)+'…' : s; }
+
+function svgOpen(w,h){
+  return `<svg viewBox="0 0 ${w} ${h}" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;font-family:${FONT_LABEL};">`;
+}
+
+/* ---- chartT1: fur color as a plain HTML table (entry-level) ---- */
+function chartT1_svg(compact){
+  const colors = DATA.chartD.colors, counts = DATA.chartD.counts;
+  const fs = compact?12:15;
+  const rows = colors.map((c,i)=>`<tr style="border-bottom:1px solid rgba(43,43,38,0.1);"><td style="padding:8px 10px; color:#2B2B26;">${esc(c)}</td><td style="padding:8px 10px; text-align:right; color:#2B2B26; font-weight:600;">${counts[i]}</td></tr>`).join('');
+  return `<div style="font-family:${FONT_TITLE};">
+    <div style="font-size:${compact?12:16}px; font-weight:700; color:#1F3D2B; margin-bottom:8px;">Sightings by Fur Color</div>
+    <table style="width:100%; border-collapse:collapse; font-size:${fs}px;">
+      <tr style="background:#1F3D2B;"><th style="text-align:left; padding:8px 10px; color:#F5F1E4; font-weight:600;">Fur color</th><th style="text-align:right; padding:8px 10px; color:#F5F1E4; font-weight:600;">Sightings</th></tr>
+      ${rows}
+    </table>
+  </div>`;
+}
+
+/* ---- chartT2: fur color as a plain single-series bar (entry-level) ---- */
+function chartT2_svg(compact){
+  const colors = DATA.chartD.colors, counts = DATA.chartD.counts;
+  const colorMap = {Gray:COLORS.gray, Cinnamon:COLORS.cinnamon, Black:COLORS.black};
+  const w = compact?360:520, h = compact?150:190;
+  const labelW = compact?78:100;
+  const barX = labelW+8;
+  const barMaxW = w-barX-46;
+  const maxV = Math.max(...counts);
+  const rowH = compact?32:40;
+  const titleSize = compact?12:16;
+  const labelSize = compact?10.5:13;
+  let y = compact?22:34;
+  let s = svgOpen(w,h);
+  s += `<text x="4" y="${compact?14:22}" font-size="${titleSize}" font-family="${FONT_TITLE}" font-weight="700" fill="#1F3D2B">Sightings by Fur Color</text>`;
+  colors.forEach((c,i)=>{
+    const bw = (counts[i]/maxV)*barMaxW;
+    s += `<text x="${labelW}" y="${y+rowH*0.55}" font-size="${labelSize}" fill="#2B2B26" text-anchor="end">${esc(c)}</text>`;
+    s += `<rect x="${barX}" y="${y}" width="${bw}" height="${rowH*0.55}" fill="${colorMap[c]||'#999'}" rx="2"></rect>`;
+    s += `<text x="${barX+bw+8}" y="${y+rowH*0.4}" font-size="${labelSize}" fill="#2B2B26">${counts[i]}</text>`;
+    y += rowH;
+  });
+  s += `</svg>`;
+  return s;
+}
+
+/* ---- chartT3: borough totals as a plain HTML table (entry-level) ---- */
+function chartT3_svg(compact){
+  const areas = DATA.chartJ.areas, totals = DATA.chartJ.totals;
+  const sorted = areas.map((a,i)=>({a,t:totals[i]})).sort((x,y)=>y.t-x.t);
+  const fs = compact?12:15;
+  const rows = sorted.map(r=>`<tr style="border-bottom:1px solid rgba(43,43,38,0.1);"><td style="padding:8px 10px; color:#2B2B26;">${esc(r.a)}</td><td style="padding:8px 10px; text-align:right; color:#2B2B26; font-weight:600;">${r.t}</td></tr>`).join('');
+  return `<div style="font-family:${FONT_TITLE};">
+    <div style="font-size:${compact?12:16}px; font-weight:700; color:#1F3D2B; margin-bottom:8px;">Sightings by Borough</div>
+    <table style="width:100%; border-collapse:collapse; font-size:${fs}px;">
+      <tr style="background:#1F3D2B;"><th style="text-align:left; padding:8px 10px; color:#F5F1E4; font-weight:600;">Borough</th><th style="text-align:right; padding:8px 10px; color:#F5F1E4; font-weight:600;">Sightings</th></tr>
+      ${rows}
+    </table>
+  </div>`;
+}
+
+/* ---- chartT4: borough totals as a plain single-series bar (entry-level) ---- */
+function chartT4_svg(compact){
+  const areas = DATA.chartJ.areas, totals = DATA.chartJ.totals;
+  const sorted = areas.map((a,i)=>({a,t:totals[i]})).sort((x,y)=>y.t-x.t);
+  const w = compact?360:560, h = compact?190:230;
+  const labelW = compact?110:150;
+  const barX = labelW+8;
+  const barMaxW = w-barX-46;
+  const maxV = Math.max(...sorted.map(r=>r.t));
+  const rowH = compact?32:40;
+  const titleSize = compact?12:16;
+  const labelSize = compact?10:12.5;
+  let y = compact?22:34;
+  let s = svgOpen(w,h);
+  s += `<text x="4" y="${compact?14:22}" font-size="${titleSize}" font-family="${FONT_TITLE}" font-weight="700" fill="#1F3D2B">Sightings by Borough</text>`;
+  sorted.forEach(r=>{
+    const bw = (r.t/maxV)*barMaxW;
+    s += `<text x="${labelW}" y="${y+rowH*0.55}" font-size="${labelSize}" fill="#2B2B26" text-anchor="end">${esc(r.a)}</text>`;
+    s += `<rect x="${barX}" y="${y}" width="${bw}" height="${rowH*0.55}" fill="${COLORS.pine}" rx="2"></rect>`;
+    s += `<text x="${barX+bw+8}" y="${y+rowH*0.4}" font-size="${labelSize}" fill="#2B2B26">${r.t}</text>`;
+    y += rowH;
+  });
+  s += `</svg>`;
+  return s;
+}
+
+/* ---- chartA: ground vs above stacked horizontal bar, top N by ground_pct ---- */
+function chartA_svg(compact){
+  const N = compact ? 9 : 14;
+  const parks = DATA.chartA.parks.slice(0,N);
+  const ground = DATA.chartA.ground.slice(0,N);
+  const above = DATA.chartA.above.slice(0,N);
+  const pct = DATA.chartA.ground_pct.slice(0,N);
+  const w = compact?400:760, h = compact? (34+N*24) : (56+N*30);
+  const labelW = compact?120:200;
+  const barX = labelW+8;
+  const barMaxW = w-barX-70;
+  const maxTotal = Math.max(...parks.map((_,i)=>ground[i]+above[i]));
+  const rowH = compact?22:28;
+  const titleSize = compact?12:16;
+  const labelSize = compact?9.5:12.5;
+  let y = compact?24:42;
+  let s = svgOpen(w,h);
+  s += `<text x="4" y="${compact?14:22}" font-size="${titleSize}" font-family="${FONT_TITLE}" font-weight="700" fill="#1F3D2B">Ground vs. Above-Ground Sightings by Park</text>`;
+  parks.forEach((p,i)=>{
+    const total = ground[i]+above[i];
+    const gw = total? (ground[i]/maxTotal)*barMaxW : 0;
+    const aw = total? (above[i]/maxTotal)*barMaxW : 0;
+    const label = compact? truncate(p,17) : truncate(p,26);
+    s += `<text x="${labelW}" y="${y+rowH*0.65}" font-size="${labelSize}" fill="#2B2B26" text-anchor="end">${esc(label)}</text>`;
+    s += `<rect x="${barX}" y="${y}" width="${gw}" height="${rowH*0.62}" fill="${COLORS.ground}" rx="1"></rect>`;
+    s += `<rect x="${barX+gw}" y="${y}" width="${aw}" height="${rowH*0.62}" fill="${COLORS.above}" rx="1"></rect>`;
+    s += `<text x="${barX+gw+aw+6}" y="${y+rowH*0.5}" font-size="${labelSize*0.85}" fill="#5C7A62">${pct[i]}%</text>`;
+    y += rowH;
+  });
+  s += `<rect x="${barX}" y="${y+4}" width="12" height="12" fill="${COLORS.ground}"></rect><text x="${barX+16}" y="${y+14}" font-size="${labelSize}" fill="#2B2B26">Ground Plane</text>`;
+  s += `<rect x="${barX+130}" y="${y+4}" width="12" height="12" fill="${COLORS.above}"></rect><text x="${barX+146}" y="${y+14}" font-size="${labelSize}" fill="#2B2B26">Above Ground</text>`;
+  s += `</svg>`;
+  return s;
+}
+
+/* ---- chartB: total sightings per park, ranked horizontal bar ---- */
+function chartB_svg(compact){
+  const N = compact ? 9 : 14;
+  const parks = DATA.chartB.parks.slice(0,N);
+  const total = DATA.chartB.total.slice(0,N);
+  const w = compact?400:760, h = compact? (34+N*24) : (52+N*30);
+  const labelW = compact?120:200;
+  const barX = labelW+8;
+  const barMaxW = w-barX-50;
+  const maxV = Math.max(...total);
+  const rowH = compact?22:28;
+  const titleSize = compact?12:16;
+  const labelSize = compact?9.5:12.5;
+  let y = compact?24:40;
+  let s = svgOpen(w,h);
+  s += `<text x="4" y="${compact?14:22}" font-size="${titleSize}" font-family="${FONT_TITLE}" font-weight="700" fill="#1F3D2B">Total Squirrel Sightings by Park</text>`;
+  parks.forEach((p,i)=>{
+    const bw = (total[i]/maxV)*barMaxW;
+    const label = compact? truncate(p,17) : truncate(p,26);
+    s += `<text x="${labelW}" y="${y+rowH*0.65}" font-size="${labelSize}" fill="#2B2B26" text-anchor="end">${esc(label)}</text>`;
+    s += `<rect x="${barX}" y="${y}" width="${bw}" height="${rowH*0.62}" fill="${COLORS.pine}" rx="1"></rect>`;
+    s += `<text x="${barX+bw+6}" y="${y+rowH*0.5}" font-size="${labelSize}" fill="#2B2B26">${total[i]}</text>`;
+    y += rowH;
+  });
+  s += `</svg>`;
+  return s;
+}
+
+/* ---- chartC: interactions with humans, stacked vertical bar by borough ---- */
+function chartC_svg(compact){
+  const areas = DATA.chartC.areas;
+  const ind = DATA.chartC.indifferent, app = DATA.chartC.approaches, run = DATA.chartC.runs_from;
+  const w = compact?400:640, h = compact?260:400;
+  const chartTop = compact?36:60, chartBottom = h-(compact?46:64);
+  const chartH = chartBottom-chartTop;
+  const maxTotal = Math.max(...areas.map((_,i)=>ind[i]+app[i]+run[i]));
+  const colW = compact?56:88, gap = compact?26:46;
+  const startX = compact?36:60;
+  const titleSize = compact?12:16;
+  const labelSize = compact?9:12.5;
+  let s = svgOpen(w,h);
+  s += `<text x="4" y="${compact?14:22}" font-size="${titleSize}" font-family="${FONT_TITLE}" font-weight="700" fill="#1F3D2B">Human Interaction by Borough</text>`;
+  areas.forEach((a,i)=>{
+    const x = startX + i*(colW+gap);
+    const totalH = ind[i]+app[i]+run[i];
+    const scale = chartH/maxTotal;
+    let yCursor = chartBottom;
+    const segs = [[run[i],COLORS.runsfrom],[app[i],COLORS.approaches],[ind[i],COLORS.indifferent]];
+    segs.forEach(([val,color])=>{
+      const segH = val*scale;
+      yCursor -= segH;
+      s += `<rect x="${x}" y="${yCursor}" width="${colW}" height="${segH}" fill="${color}"></rect>`;
+    });
+    s += `<text x="${x+colW/2}" y="${chartBottom+(compact?16:20)}" font-size="${labelSize}" fill="#2B2B26" text-anchor="middle">${compact? a.split(' ')[0] : a}</text>`;
+    s += `<text x="${x+colW/2}" y="${yCursor-8}" font-size="${labelSize*0.85}" fill="#5C7A62" text-anchor="middle">n=${totalH}</text>`;
+  });
+  let lx = startX, ly = h-18;
+  const legend = [['Indifferent',COLORS.indifferent],['Approaches',COLORS.approaches],['Runs From',COLORS.runsfrom]];
+  legend.forEach(([label,color])=>{
+    s += `<rect x="${lx}" y="${ly}" width="12" height="12" fill="${color}"></rect><text x="${lx+16}" y="${ly+10}" font-size="${labelSize}" fill="#2B2B26">${label}</text>`;
+    lx += label.length* (compact?7:8) + 38;
+  });
+  s += `</svg>`;
+  return s;
+}
+
+/* ---- chartD: fur color donut ---- */
+function chartD_svg(compact){
+  const colors = DATA.chartD.colors, counts = DATA.chartD.counts;
+  const total = counts.reduce((a,b)=>a+b,0);
+  const w = compact?400:520, h = compact?250:400;
+  const cx = compact? w*0.32 : w*0.36, cy = h/2-6, r = compact?70:120, rInner = r*0.58;
+  const colorMap = {Gray:COLORS.gray, Cinnamon:COLORS.cinnamon, Black:COLORS.black};
+  const titleSize = compact?12:16;
+  let s = svgOpen(w,h);
+  s += `<text x="4" y="${compact?14:22}" font-size="${titleSize}" font-family="${FONT_TITLE}" font-weight="700" fill="#1F3D2B">Primary Fur Color, Citywide</text>`;
+  let angle = -Math.PI/2;
+  colors.forEach((c,i)=>{
+    const frac = counts[i]/total;
+    const a0 = angle, a1 = angle + frac*Math.PI*2;
+    const x0 = cx+r*Math.cos(a0), y0 = cy+r*Math.sin(a0);
+    const x1 = cx+r*Math.cos(a1), y1 = cy+r*Math.sin(a1);
+    const xi0 = cx+rInner*Math.cos(a1), yi0 = cy+rInner*Math.sin(a1);
+    const xi1 = cx+rInner*Math.cos(a0), yi1 = cy+rInner*Math.sin(a0);
+    const large = (a1-a0)>Math.PI?1:0;
+    const path = `M${x0},${y0} A${r},${r} 0 ${large} 1 ${x1},${y1} L${xi0},${yi0} A${rInner},${rInner} 0 ${large} 0 ${xi1},${yi1} Z`;
+    s += `<path d="${path}" fill="${colorMap[c]||'#999'}"></path>`;
+    angle = a1;
+  });
+  s += `<text x="${cx}" y="${cy+5}" font-size="${compact?15:20}" font-family="${FONT_TITLE}" font-weight="700" fill="#1F3D2B" text-anchor="middle">${total}</text>`;
+  s += `<text x="${cx}" y="${cy+(compact?18:26)}" font-size="${compact?8:11}" fill="#5C7A62" text-anchor="middle">sightings</text>`;
+  const legendX = compact? w*0.58 : cx+r+34;
+  let ly = compact? cy-36 : cy-48;
+  colors.forEach((c,i)=>{
+    const pct = Math.round(counts[i]/total*100);
+    s += `<rect x="${legendX}" y="${ly}" width="${compact?12:15}" height="${compact?12:15}" fill="${colorMap[c]||'#999'}"></rect>`;
+    s += `<text x="${legendX+(compact?16:22)}" y="${ly+(compact?10:13)}" font-size="${compact?10:13}" fill="#2B2B26">${c} — ${pct}%</text>`;
+    ly += compact?24:34;
+  });
+  s += `</svg>`;
+  return s;
+}
+
+/* ---- chartE: top activities, horizontal bar ---- */
+function chartE_svg(compact){
+  const acts = DATA.chartE.activities, counts = DATA.chartE.counts;
+  const w = compact?400:680, h = compact? (30+acts.length*26) : (52+acts.length*34);
+  const labelW = compact?90:150;
+  const barX = labelW+8;
+  const barMaxW = w-barX-50;
+  const maxV = Math.max(...counts);
+  const rowH = compact?24:32;
+  const titleSize = compact?12:16;
+  const labelSize = compact?10:13;
+  let y = compact?24:44;
+  let s = svgOpen(w,h);
+  s += `<text x="4" y="${compact?14:22}" font-size="${titleSize}" font-family="${FONT_TITLE}" font-weight="700" fill="#1F3D2B">Most Common Squirrel Activities</text>`;
+  acts.forEach((a,i)=>{
+    const bw = (counts[i]/maxV)*barMaxW;
+    s += `<text x="${labelW}" y="${y+rowH*0.62}" font-size="${labelSize}" fill="#2B2B26" text-anchor="end">${esc(a)}</text>`;
+    s += `<rect x="${barX}" y="${y}" width="${bw}" height="${rowH*0.6}" fill="${COLORS.brass}" rx="1"></rect>`;
+    s += `<text x="${barX+bw+6}" y="${y+rowH*0.5}" font-size="${labelSize}" fill="#2B2B26">${counts[i]}</text>`;
+    y += rowH;
+  });
+  s += `</svg>`;
+  return s;
+}
+
+/* ---- chartG: height above ground histogram ---- */
+function chartG_svg(compact){
+  const buckets = DATA.chartG.buckets, counts = DATA.chartG.counts;
+  const w = compact?400:560, h = compact?260:360;
+  const chartTop = compact?34:56, chartBottom = h-(compact?42:58);
+  const chartH = chartBottom-chartTop;
+  const maxV = Math.max(...counts);
+  const colW = compact?54:76, gap = compact?18:32;
+  const startX = compact?26:48;
+  const titleSize = compact?12:16;
+  const labelSize = compact?9.5:12.5;
+  let s = svgOpen(w,h);
+  s += `<text x="4" y="${compact?14:22}" font-size="${titleSize}" font-family="${FONT_TITLE}" font-weight="700" fill="#1F3D2B">Height Above Ground When Spotted</text>`;
+  buckets.forEach((b,i)=>{
+    const x = startX + i*(colW+gap);
+    const bh = (counts[i]/maxV)*chartH;
+    const y = chartBottom-bh;
+    s += `<rect x="${x}" y="${y}" width="${colW}" height="${bh}" fill="${COLORS.sage||'#5C7A62'}" rx="1"></rect>`;
+    s += `<text x="${x+colW/2}" y="${y-8}" font-size="${labelSize}" fill="#2B2B26" text-anchor="middle">${counts[i]}</text>`;
+    s += `<text x="${x+colW/2}" y="${chartBottom+(compact?16:20)}" font-size="${labelSize}" fill="#2B2B26" text-anchor="middle">${b}</text>`;
+  });
+  s += `</svg>`;
+  return s;
+}
+
+/* ---- chartI: fur color mix by borough, stacked vertical bar ---- */
+function chartI_svg(compact){
+  const areas = DATA.chartI.areas, gray=DATA.chartI.gray, cin=DATA.chartI.cinnamon, black=DATA.chartI.black, totals=DATA.chartI.totals;
+  const w = compact?400:600, h = compact?270:400;
+  const chartTop = compact?36:60, chartBottom = h-(compact?46:64);
+  const chartH = chartBottom-chartTop;
+  const maxTotal = Math.max(...totals);
+  const colW = compact?56:82, gap = compact?26:44;
+  const startX = compact?36:56;
+  const titleSize = compact?12:16;
+  const labelSize = compact?9:12.5;
+  let s = svgOpen(w,h);
+  s += `<text x="4" y="${compact?14:22}" font-size="${titleSize}" font-family="${FONT_TITLE}" font-weight="700" fill="#1F3D2B">Fur Color Mix by Borough</text>`;
+  areas.forEach((a,i)=>{
+    const x = startX + i*(colW+gap);
+    const scale = chartH/maxTotal;
+    let yCursor = chartBottom;
+    const segs = [[black[i],COLORS.black],[cin[i],COLORS.cinnamon],[gray[i],COLORS.gray]];
+    segs.forEach(([val,color])=>{
+      const segH = val*scale;
+      yCursor -= segH;
+      s += `<rect x="${x}" y="${yCursor}" width="${colW}" height="${segH}" fill="${color}"></rect>`;
+    });
+    s += `<text x="${x+colW/2}" y="${chartBottom+(compact?16:20)}" font-size="${labelSize}" fill="#2B2B26" text-anchor="middle">${compact? a.split(' ')[0] : a}</text>`;
+    s += `<text x="${x+colW/2}" y="${yCursor-8}" font-size="${labelSize*0.85}" fill="#5C7A62" text-anchor="middle">n=${totals[i]}</text>`;
+  });
+  let lx = startX, ly = h-18;
+  const legend = [['Gray',COLORS.gray],['Cinnamon',COLORS.cinnamon],['Black',COLORS.black]];
+  legend.forEach(([label,color])=>{
+    s += `<rect x="${lx}" y="${ly}" width="12" height="12" fill="${color}"></rect><text x="${lx+16}" y="${ly+10}" font-size="${labelSize}" fill="#2B2B26">${label}</text>`;
+    lx += label.length*(compact?7:8)+40;
+  });
+  s += `</svg>`;
+  return s;
+}
+
+/* ---- chartJ: borough treemap (total sightings) ---- */
+function chartJ_svg(compact){
+  const areas = DATA.chartJ.areas, totals = DATA.chartJ.totals;
+  const w = compact?400:640, h = compact?260:380;
+  const top = compact?30:50;
+  const plotW = w-16, plotH = h-top-14;
+  const total = totals.reduce((a,b)=>a+b,0);
+  const titleSize = compact?12:16;
+  const labelSize = compact?10.5:14;
+  const palette = [COLORS.pine, COLORS.sage||'#5C7A62', COLORS.brass, COLORS.ground];
+  // simple treemap: one row, widths proportional to totals
+  let s = svgOpen(w,h);
+  s += `<text x="4" y="${compact?14:22}" font-size="${titleSize}" font-family="${FONT_TITLE}" font-weight="700" fill="#1F3D2B">Total Sightings by Borough</text>`;
+  const sorted = areas.map((a,i)=>({a,t:totals[i],i})).sort((x,y)=>y.t-x.t);
+  let x = 8;
+  sorted.forEach((item,idx)=>{
+    const bw = (item.t/total)*plotW;
+    const pct = Math.round(item.t/total*100);
+    s += `<rect x="${x}" y="${top}" width="${bw}" height="${plotH}" fill="${palette[idx%palette.length]}" stroke="#fffdf7" stroke-width="2"></rect>`;
+    if(bw>50){
+      s += `<text x="${x+bw/2}" y="${top+plotH/2-6}" font-size="${labelSize}" fill="#F5F1E4" text-anchor="middle" font-weight="600">${item.a}</text>`;
+      s += `<text x="${x+bw/2}" y="${top+plotH/2+14}" font-size="${labelSize*0.9}" fill="#F5F1E4" text-anchor="middle">${item.t} (${pct}%)</text>`;
+    }
+    x += bw;
+  });
+  s += `</svg>`;
+  return s;
+}
+
+/* ---- chartK: secondary/highlight fur color donut ---- */
+function chartK_svg(compact){
+  const labels = DATA.chartK.labels, counts = DATA.chartK.counts;
+  const total = counts.reduce((a,b)=>a+b,0);
+  const w = compact?400:520, h = compact?250:400;
+  const cx = compact? w*0.32 : w*0.36, cy = h/2-6, r = compact?70:120, rInner = r*0.58;
+  const colorMap = {Gray:COLORS.gray, Cinnamon:COLORS.cinnamon, White:COLORS.white, Black:COLORS.black, Mixed:COLORS.mixed};
+  const titleSize = compact?12:16;
+  let s = svgOpen(w,h);
+  s += `<text x="4" y="${compact?14:22}" font-size="${titleSize}" font-family="${FONT_TITLE}" font-weight="700" fill="#1F3D2B">Secondary (Highlight) Fur Color</text>`;
+  let angle = -Math.PI/2;
+  labels.forEach((c,i)=>{
+    const frac = counts[i]/total;
+    const a0 = angle, a1 = angle + frac*Math.PI*2;
+    const x0 = cx+r*Math.cos(a0), y0 = cy+r*Math.sin(a0);
+    const x1 = cx+r*Math.cos(a1), y1 = cy+r*Math.sin(a1);
+    const xi0 = cx+rInner*Math.cos(a1), yi0 = cy+rInner*Math.sin(a1);
+    const xi1 = cx+rInner*Math.cos(a0), yi1 = cy+rInner*Math.sin(a0);
+    const large = (a1-a0)>Math.PI?1:0;
+    const path = `M${x0},${y0} A${r},${r} 0 ${large} 1 ${x1},${y1} L${xi0},${yi0} A${rInner},${rInner} 0 ${large} 0 ${xi1},${yi1} Z`;
+    s += `<path d="${path}" fill="${colorMap[c]||'#999'}" stroke="#fffdf7" stroke-width="1"></path>`;
+    angle = a1;
+  });
+  s += `<text x="${cx}" y="${cy+5}" font-size="${compact?15:20}" font-family="${FONT_TITLE}" font-weight="700" fill="#1F3D2B" text-anchor="middle">${total}</text>`;
+  s += `<text x="${cx}" y="${cy+(compact?18:26)}" font-size="${compact?8:11}" fill="#5C7A62" text-anchor="middle">logged</text>`;
+  const legendX = compact? w*0.58 : cx+r+34;
+  let ly = compact? cy-46 : cy-62;
+  labels.forEach((c,i)=>{
+    const pct = Math.round(counts[i]/total*100);
+    s += `<rect x="${legendX}" y="${ly}" width="${compact?12:15}" height="${compact?12:15}" fill="${colorMap[c]||'#999'}"></rect>`;
+    s += `<text x="${legendX+(compact?16:22)}" y="${ly+(compact?10:13)}" font-size="${compact?10:13}" fill="#2B2B26">${c} — ${pct}%</text>`;
+    ly += compact?22:30;
+  });
+  s += `</svg>`;
+  return s;
+}
+
+const CHARTS = {
+  T1:{render:chartT1_svg, title:"Sightings by Fur Color (Table)",
+     caption:`<b>What it shows:</b> a simple table of how many squirrels were spotted with each fur color, citywide. The simplest possible way to compare a small number of categories — just find the row.`},
+  T2:{render:chartT2_svg, title:"Sightings by Fur Color (Bar)",
+     caption:`<b>What it shows:</b> the same fur-color counts as a bar chart. Longer bar means more sightings — the most basic way to compare magnitude visually.`},
+  T3:{render:chartT3_svg, title:"Sightings by Borough (Table)",
+     caption:`<b>What it shows:</b> total squirrel sightings in each of the four boroughs, as a simple table.`},
+  T4:{render:chartT4_svg, title:"Sightings by Borough (Bar)",
+     caption:`<b>What it shows:</b> the same borough totals as a bar chart — compare bar length to find the borough with the most sightings.`},
+  A:{render:chartA_svg, title:"Ground vs. Above-Ground Sightings by Park",
+     caption:`<b>What it shows:</b> the share of sightings at ground level vs. up in trees/structures, ranked by park. Parks near the top of this list have squirrels stuck mostly on the ground — often a sign of thin tree canopy.`},
+  B:{render:chartB_svg, title:"Total Sightings by Park",
+     caption:`<b>What it shows:</b> a straight head-count of squirrel sightings per park, ranked highest to lowest. Good for questions about raw population or where to send more staff — but it says nothing about behavior or location within the park.`},
+  C:{render:chartC_svg, title:"Human Interaction by Borough",
+     caption:`<b>What it shows:</b> how squirrels react to people (Indifferent / Approaches / Runs From) broken down by borough. Useful for questions about how "bold" or "skittish" squirrels are in a given area.`},
+  D:{render:chartD_svg, title:"Primary Fur Color, Citywide",
+     caption:`<b>What it shows:</b> the overall split of fur colors across all 433 sightings. Handy for a single citywide fact, but it can't tell you where a color is more common.`},
+  E:{render:chartE_svg, title:"Most Common Squirrel Activities",
+     caption:`<b>What it shows:</b> what squirrels were actually doing when spotted, ranked by frequency. Good for questions about behavior — what visitors are likely to see, or when signage/education should focus attention.`},
+  G:{render:chartG_svg, title:"Height Above Ground When Spotted",
+     caption:`<b>What it shows:</b> how high off the ground squirrels were when logged, bucketed into ranges. The only chart here that answers a literal "how high" question, like where to mount a feeder out of reach.`},
+  I:{render:chartI_svg, title:"Fur Color Mix by Borough",
+     caption:`<b>What it shows:</b> the fur-color breakdown within each borough, aggregated. Good for a borough-level "which area has more of X color" question — a citywide chart or a park-level chart wouldn't capture the regional split.`},
+  J:{render:chartJ_svg, title:"Total Sightings by Borough",
+     caption:`<b>What it shows:</b> the share of all census sightings coming from each borough, sized proportionally. A quick "who dominates" answer at the borough level, rather than the park level.`},
+  K:{render:chartK_svg, title:"Secondary (Highlight) Fur Color",
+     caption:`<b>What it shows:</b> the breakdown of each squirrel's secondary/highlight fur marking — a different column from primary coat color, and easy to mix up with chart D.`}
+};
+
+/* ============================== LEVEL REFERENCE DATA ============================== */
+const LEVEL_INFO = [
+  {num:1, type:"forward", chartId:"T1", ticket:"What's the most common fur color spotted during the census?",
+   why:"The absolute floor: pure lookup in a 3-row table, no visual encoding to interpret at all."},
+  {num:2, type:"forward", chartId:"T2", ticket:"Same question, now as a bar — which color shows up most?",
+   why:"Same fact, same 3 categories — introduces \"compare bar length\" with zero added topic load."},
+  {num:3, type:"forward", chartId:"T3", ticket:"Which borough logged the most total sightings?",
+   why:"One more row than level 1 — still a pure lookup, slightly bigger set (4 boroughs)."},
+  {num:4, type:"forward", chartId:"T4", ticket:"Same question as a bar — which borough's bar is tallest?",
+   why:"Locks in bar-reading before real charts start adding complexity."},
+  {num:5, type:"forward", chartId:"B", ticket:"Which single park logged the highest number of squirrel sightings?",
+   why:"First \"real\" chart: same skill as level 4, but 20 categories instead of 4 — tests whether scale trips you up."},
+  {num:6, type:"forward", chartId:"E", ticket:"What are squirrels most often seen doing, so guides know what to point out?",
+   why:"New topic, same ranked-bar skill — confirms the skill transfers, not just memorized."},
+  {num:7, type:"forward", chartId:"G", ticket:"How high above ground should squirrel-proof feeders be mounted?",
+   why:"New chart family: binned/histogram instead of one-bar-per-category."},
+  {num:8, type:"forward", chartId:"D", ticket:"What's the most common fur color, for the field guide cover?",
+   why:"Callback to levels 1/2's exact fact, now as a donut — tests proportion-reading, a genuinely new skill."},
+  {num:9, type:"forward", chartId:"C", ticket:"Which borough's squirrels seem boldest around people?",
+   why:"New family: segmented/stacked bars with a legend to decode."},
+  {num:10, type:"forward", chartId:"J", ticket:"Which borough dominates the census, at a glance?",
+   why:"Granularity trap vs. level 5 (park-level) and callback to levels 3/4 (borough totals) — now as a treemap."},
+  {num:11, type:"forward", chartId:"A", ticket:"Which parks might benefit from more tree cover?",
+   why:"Reuses the stacked-bar skill from level 9 on a new topic (ground vs. canopy)."},
+  {num:12, type:"forward", chartId:"I", ticket:"What's the fur-color mix in each borough?",
+   why:"Near-duplicate trap: easy to confuse with chart D (primary color) or chart J (borough granularity)."},
+  {num:13, type:"reverse", chartId:"D", ticket:"(pick the matching ticket)",
+   why:"First reverse round — deliberately uses the already-familiar chart from level 8 so the new interaction is the only new variable. Distractor tickets are unrelated topics, keeping it gentle."},
+  {num:14, type:"reverse", chartId:"K", ticket:"(pick the matching ticket)",
+   why:"Donut-vs-donut trap against chart D — reverse round makes the mix-up harder to shortcut. Saved for last as the hardest level."}
+];
+
+function renderLevelsTable(){
+  const table = document.getElementById('levelsTable');
+  LEVEL_INFO.forEach(lvl=>{
+    const tr = document.createElement('tr');
+    const chart = CHARTS[lvl.chartId];
+    tr.innerHTML = `
+      <td class="level-num">${lvl.num}</td>
+      <td><span class="round-tag ${lvl.type}">${lvl.type}</span></td>
+      <td class="chart-name">${chart ? chart.title : lvl.chartId}</td>
+      <td>${esc(lvl.ticket)}</td>
+      <td class="why">${esc(lvl.why)}</td>
+    `;
+    table.appendChild(tr);
+  });
+}
+
+function renderChartGallery(){
+  const grid = document.getElementById('chartGrid');
+  Object.keys(CHARTS).forEach(id=>{
+    const chart = CHARTS[id];
+    const card = document.createElement('div');
+    card.className = 'chart-card';
+    const plainCaption = chart.caption.split('<b>').join('').split('</b>').join('');
+    card.innerHTML = `
+      <div class="chart-id">Chart ${id}</div>
+      ${chart.render(false)}
+      <div class="chart-caption"><b>${esc(chart.title)}.</b> ${esc(plainCaption)}</div>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+renderLevelsTable();
+renderChartGallery();
+</script>
+</body>
+</html>
