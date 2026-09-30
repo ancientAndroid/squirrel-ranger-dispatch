@@ -613,11 +613,11 @@ const CHARTS = {
 const LEVEL_INFO = [
   {num:1, type:"forward", chartId:"T1", ticket:"What's the most common fur color spotted during the census?",
    why:"The absolute floor: pure lookup in a 3-row table, no visual encoding to interpret at all."},
-  {num:2, type:"forward", chartId:"T2", ticket:"Same question, now as a bar — which color shows up most?",
+  {num:2, type:"forward", chartId:"T2", ticket:"Which color shows up the most?",
    why:"Same fact, same 3 categories — introduces \"compare bar length\" with zero added topic load."},
   {num:3, type:"forward", chartId:"T3", ticket:"Which borough logged the most total sightings?",
    why:"One more row than level 1 — still a pure lookup, slightly bigger set (4 boroughs)."},
-  {num:4, type:"forward", chartId:"T4", ticket:"Same question as a bar — which borough's bar is tallest?",
+  {num:4, type:"forward", chartId:"T4", ticket:"Which borough has the most sightings?",
    why:"Locks in bar-reading before real charts start adding complexity."},
   {num:5, type:"forward", chartId:"B", ticket:"Which single park logged the highest number of squirrel sightings?",
    why:"First \"real\" chart: same skill as level 4, but 20 categories instead of 4 — tests whether scale trips you up."},
